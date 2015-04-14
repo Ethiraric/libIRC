@@ -14,14 +14,14 @@
 
   /* New functions*/
 
-t_string		str_new()
+void		str_new(t_string *str)
 {
-  static const t_string	ret =
+  static const t_string	model =
   {
     (void *)(0)
   };
 
-  return (ret);
+  *str = model;
 }
 
 int		str_newfromstr(t_string *dst, const t_string *src)
@@ -179,7 +179,7 @@ static int	str_append_1parent(t_string *str, const char *app)
   return (0);
 }
 
-int		str_append(t_string *str, t_string *app)
+int		str_append(t_string *str, const t_string *app)
 {
   if (str->m->parents == 1)
     return (str_append_1parent(str, app->m->str));
@@ -195,21 +195,21 @@ int		str_appendcstr(t_string *str, const char *app)
 
   /* Getters */
 
-size_t		str_size(t_string *str)
+size_t		str_size(const t_string *str)
 {
   if (str->m)
     return (str->m->len);
   return (0);
 }
 
-char		*str_str(t_string *str)
+char		*str_str(const t_string *str)
 {
   if (!str->m)
     return (NULL);
   return (str->m->str);
 }
 
-const char	*str_safestr(t_string *str)
+const char	*str_safestr(const t_string *str)
 {
   if (!str->m)
     return ("");

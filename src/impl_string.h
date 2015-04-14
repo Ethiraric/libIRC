@@ -12,6 +12,7 @@
 # define IMPL_STRING_H_
 
 # include <sys/types.h>
+# include "t_string.h"
 
 typedef struct	s_privstring
 {
