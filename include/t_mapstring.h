@@ -11,7 +11,21 @@
 #ifndef T_MAPSTRING_H_
 # define T_MAPSTRING_H_
 
-typedef struct s_mapstring t_mapstring;
+# include "t_string.h"
+
+typedef struct	s_mapstringpair
+{
+  t_string	key;
+  void		*value;
+}		t_mapstringpair;
+
+typedef struct		s_mapstring
+{
+  t_mapstringpair	*tab;
+  size_t		len;
+  size_t		allocd;
+  size_t		alloc_step;
+}			t_mapstring;
 
 void		mapstring_new(t_mapstring *map);
 void		mapstring_delete(t_mapstring *mapstr);

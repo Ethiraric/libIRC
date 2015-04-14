@@ -10,7 +10,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "impl_string.h"
+#include "t_string.h"
 
   /* New functions*/
 
@@ -117,6 +117,14 @@ int		str_copy(t_string *dst, const t_string *src)
   dst->m = src->m;
   if (src->m)
     ++(src->m->parents);
+  return (0);
+}
+
+  /* Assign */
+
+int		str_assign(t_string *dst, const t_string *src)
+{
+  dst->m = src->m;
   return (0);
 }
 

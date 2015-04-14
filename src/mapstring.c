@@ -10,7 +10,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "impl_mapstring.h"
+#include "t_mapstring.h"
 
   /* New */
 
@@ -178,8 +178,7 @@ static int	mapstring_insertat(t_mapstring *map, unsigned int idx,
 }
 
 static unsigned int	mapstring_insertfindpos(const t_mapstring *map,
-						const t_string *key,
-						void *value)
+						const t_string *key)
 {
   unsigned int	lbound;
   unsigned int	ubound;
@@ -200,10 +199,7 @@ static unsigned int	mapstring_insertfindpos(const t_mapstring *map,
       else if (cmp < 0)
 	lbound = pos;
       else
-	{
-	  map->tab[pos].value = value;
-	  return (0);
-	}
+	return (pos);
       pos = (ubound + lbound) / 2;
     }
   /* We now have two contiguous cells in our tab
@@ -219,9 +215,9 @@ static unsigned int	mapstring_insertfindpos(const t_mapstring *map,
   cmp = strcmp(str_safestr(&map->tab[pos].key), keystr);
   /* Between / at the second cell */
   if (cmp >= 0)
-    return (pos + 1);
+    return (pos);
   /* After the two cells */
-  return (pos + 2);
+  return (pos + 1);
 }
 
 int		mapstring_insert(t_mapstring *map, const t_string *key,
@@ -240,7 +236,7 @@ int		mapstring_insert(t_mapstring *map, const t_string *key,
       ++map->len;
       return (0);
     }
-  pos = mapstring_insertfindpos(map, key, value);
+  pos = mapstring_insertfindpos(map, key);
   if (pos < map->len)
     {
       if (!strcmp(str_safestr(&map->tab[pos].key), str_safestr(key)))
@@ -250,7 +246,9 @@ int		mapstring_insert(t_mapstring *map, const t_string *key,
 	}
       return (mapstring_insertat(map, pos, key, value));
     }
-  return (str_copy(&map->tab[pos].key, key));
+  ++map->len;
+  map->tab[pos].value = value;
+  return (str_newfromstr(&map->tab[pos].key, key));
 }
 
 int		mapstring_insertcstr(t_mapstring *map, const char *ckey,
@@ -282,14 +280,14 @@ int		mapstring_insertnew(t_mapstring *map, const t_string *key,
       ++map->len;
       return (0);
     }
-  pos = mapstring_insertfindpos(map, key, value);
+  pos = mapstring_insertfindpos(map, key);
   if (pos < map->len)
     {
       if (!strcmp(str_safestr(&map->tab[pos].key), str_safestr(key)))
 	return (2);
       return (mapstring_insertat(map, pos, key, value));
     }
-  return (str_copy(&map->tab[pos].key, key));
+  return (str_newfromstr(&map->tab[pos].key, key));
 }
 
 int		mapstring_insertnewcstr(t_mapstring *map, const char *ckey,

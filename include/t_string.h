@@ -13,7 +13,23 @@
 
 # include <sys/types.h>
 
-typedef struct s_string t_string;
+typedef struct	s_privstring
+{
+  unsigned int	parents;
+  char		*str;
+  size_t	len;
+  size_t	allocd;
+}		t_privstring;
+
+/*
+** Holds just a "member" pointer to datas
+** This is to allow copy-on-write
+*/
+
+typedef struct	s_string
+{
+  t_privstring	*m;
+}		t_string;
 
 /*
 ** Library functions (all prefixed with "str_")
@@ -26,6 +42,7 @@ int		str_newfromcstr(t_string *ret, const char *str);
 int		str_delete(t_string *ret);
 int		str_resize(t_string *str, size_t newsize);
 int		str_copy(t_string *dst, const t_string *src);
+int		str_assign(t_string *dst, const t_string *src);
 int		str_append(t_string *str, const t_string *app);
 int		str_appendcstr(t_string *str, const char *app);
 int		str_detach(t_string *str);
