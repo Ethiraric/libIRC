@@ -40,6 +40,7 @@ int		str_newfromcstr(t_string *ret, const char *str)
   if (!ret->m->str)
     {
       free(ret->m);
+      ret->m = 0;
       return (1);
     }
   ret->m->len = strlen(str);

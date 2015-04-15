@@ -35,16 +35,16 @@ typedef struct	s_buffer
 
 /*
 ** Manipulating buffers
-** Functions return 0 on success, a non-zero value on failure
 */
 
 void		buffer_new(t_buffer *buff);
 int		buffer_resize(t_buffer *buff, size_t newsize);
-int		buffer_append(t_buffer *buff, void *data, size_t size);
+int		buffer_append(t_buffer *buff, const void *data, size_t size);
 int		buffer_rotate(t_buffer *buff, size_t shift);
 void		buffer_delete(t_buffer *buff);
 void		*buffer_data(t_buffer *buff);
 size_t		buffer_size(t_buffer *buff);
 size_t		buffer_allocd_size(t_buffer *buff);
+int		buffer_write(t_buffer *buff, const char *fmt, ...);
 
 #endif /* !BUFFER_H_ */

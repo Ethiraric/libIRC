@@ -11,7 +11,7 @@
 NAME		=	libIRC.a
 CC		=	gcc
 AR		=	ar rcs
-CFLAGS		=	-W -Wall -Iinclude
+CFLAGS		=	-W -Wall -Iinclude -D_GNU_SOURCE
 LDFLAGS		=
 RM		=	@rm -vf
 MAKE		+=	--no-print-directory
@@ -19,6 +19,7 @@ MAKE		+=	--no-print-directory
 SRC		=	src/buffer.c
 SRC		+=	src/string.c
 SRC		+=	src/mapstring.c
+SRC		+=	src/ircconnection.c
 
 OBJ		=	$(addprefix out/, $(notdir $(SRC:.c=.o)))
 

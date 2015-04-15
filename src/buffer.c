@@ -8,6 +8,8 @@
 ** Last update Tue Apr 14 16:09:41 2015 Florian SABOURIN
 */
 
+#include <stdarg.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "buffer.h"
@@ -37,7 +39,7 @@ int		buffer_resize(t_buffer *buff, size_t newsize)
 }
 
 /* Appends @size bytes of @data to the buffer */
-int		buffer_append(t_buffer *buff, void *data, size_t size)
+int		buffer_append(t_buffer *buff, const void *data, size_t size)
 {
   if (buff->len + size + 1 > buff->allocd &&
       buffer_resize(buff, buff->len + size))
@@ -90,4 +92,25 @@ size_t		buffer_size(t_buffer *buff)
 size_t		buffer_allocd_size(t_buffer *buff)
 {
   return (buff->allocd);
+}
+
+/* Formatted print to @buff */
+int		buffer_write(t_buffer *buff, const char *fmt, ...)
+{
+  va_list	va;
+  char		*msg;
+  int		ret;
+
+  va_start(va, fmt);
+  ret = vasprintf(&msg, fmt, va);
+  va_end(va);
+  if (ret == -1)
+    return (ret);
+  if (buffer_append(buff, msg, ret))
+    {
+      free(msg);
+      return (-1);
+    }
+  free(msg);
+  return (ret);
 }
