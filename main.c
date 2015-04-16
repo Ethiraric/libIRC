@@ -17,11 +17,48 @@
 #include <unistd.h>
 #include "irc.h"
 
+int	handle_input(t_ircconnection *irc, char *cmd)
+{
+  int	ret;
+  char	*msg;
+
+  if (*cmd != '/')
+    {
+      ret = asprintf(&msg, "%s\r\n", cmd);
+      if (ret == -1)
+	error(1, errno, "asprintf");
+      if (irc_send_raw(irc, msg, ret))
+	error(1, errno, "malloc");
+      free(msg);
+      return (0);
+    }
+  else
+    {
+      ++cmd;
+      if (!strncasecmp(cmd, "join", 4))
+	{
+	  msg = strtok(cmd + 4, " ");
+	  if (msg)
+	    return (irc_join(irc, msg));
+	  fprintf(stderr, "Missing args for join\n");
+	  return (0);
+	}
+      if (!strncasecmp(cmd, "part", 4))
+	{
+	  msg = strtok(cmd + 4, " ");
+	  if (msg)
+	    return (irc_join(irc, msg));
+	  fprintf(stderr, "Missing args for part\n");
+	  return (0);
+	}
+    }
+  return (0);
+}
+
 int	loop(t_ircconnection *irc)
 {
   char	*cmd;
   char	*end;
-  int	ret;
   size_t	l;
 
   (void)irc;
@@ -33,15 +70,8 @@ int	loop(t_ircconnection *irc)
     {
       end = strchr(cmd, 0);
       *(--end) = 0;
-      if (*cmd)
-	{
-	  ret = asprintf(&end, "%s\r\n", cmd);
-	  if (ret == -1)
-	    error(1, errno, "asprintf");
-	  if (irc_send_raw(irc, end, ret))
-	    error(1, errno, "malloc");
-	  free(end);
-	}
+      if (*cmd && handle_input(irc, cmd))
+	error(1, errno, "malloc");
       if (irc_send(irc))
 	error(1, errno, "irc_send");
       if (irc_recv(irc))
@@ -49,7 +79,14 @@ int	loop(t_ircconnection *irc)
       if (irc_parse_command(irc))
 	error(1, errno, "malloc");
       if (irc_get_command(irc))
-	printf("<< %s\n", irc_get_command(irc));
+	{
+	  if (irc_eval_cmd(irc))
+	    {
+	      perror("irc_eval_cmd");
+	      return (1);
+	    }
+	  printf("<< %s\n", irc_get_command(irc));
+	}
       free(cmd);
       cmd = NULL;
       printf(">> ");

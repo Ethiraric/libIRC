@@ -20,6 +20,8 @@ SRC		=	src/buffer.c
 SRC		+=	src/string.c
 SRC		+=	src/mapstring.c
 SRC		+=	src/ircconnection.c
+SRC		+=	src/irc_commands.c
+SRC		+=	src/irc_eval_cmd.c
 
 OBJ		=	$(addprefix out/, $(notdir $(SRC:.c=.o)))
 

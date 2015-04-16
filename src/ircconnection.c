@@ -10,6 +10,8 @@
 
 #include <error.h>
 #include <netdb.h>
+#include <stdarg.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -26,13 +28,14 @@ void		irc_co_new(t_ircconnection *co)
 
 void		irc_co_delete(t_ircconnection *co)
 {
-  mapstring_delete(&co->channels);
+  mapstring_delete(&co->uchanlist);
   buffer_delete(&co->buff_r);
   buffer_delete(&co->buff_w);
   str_delete(&co->nick);
   str_delete(&co->user);
   str_delete(&co->realname);
   str_delete(&co->servername);
+  free_cmd(co);
 }
 
   /* Connect */
@@ -149,6 +152,26 @@ int		irc_send_raw(t_ircconnection *co, const void *dat, size_t len)
 {
   if (buffer_append(&co->buff_w, dat, len))
     return (1);
+  return (0);
+}
+
+int		irc_send_formatted(t_ircconnection *co, const char *fmt, ...)
+{
+  va_list	va;
+  char		*msg;
+  int		ret;
+
+  va_start(va, fmt);
+  ret = vasprintf(&msg, fmt, va);
+  va_end(va);
+  if (ret == -1)
+    return (1);
+  if (irc_send_raw(co, msg, ret))
+    {
+      free(msg);
+      return (1);
+    }
+  free(msg);
   return (0);
 }
 
