@@ -12,6 +12,7 @@
 # define IRC_H_
 
 #include <arpa/inet.h>
+#include <stdbool.h>
 #include "t_mapstring.h"
 #include "t_string.h"
 #include "buffer.h"
@@ -28,6 +29,10 @@ typedef struct	s_user
   t_mode	chanmode;
   t_mode	netmode;
 }		t_user;
+
+int		new_user(t_user *user, char *prefix);
+int		delete_user(t_user *user, bool free_struct);
+
   /* A channel */
 typedef struct	s_channel
 {
@@ -36,6 +41,9 @@ typedef struct	s_channel
   t_string	name;
   t_mode	mode;
 }		t_channel;
+
+void		new_chan(t_channel *chan);
+int		delete_chan(t_channel *chan, bool free_struct);
 
 typedef struct	s_command
 {
@@ -50,7 +58,7 @@ typedef struct	s_command
 typedef struct		s_ircconnection
 {
   struct sockaddr_in	sin;
-  t_mapstring		uchanlist;
+  t_mapstring		chanlist;
   t_command		cmd;
   t_buffer		buff_w;
   t_buffer		buff_r;
@@ -79,11 +87,15 @@ int		irc_parse_command(t_ircconnection *co);
 const char	*irc_get_command(const t_ircconnection *co);
 int		irc_send_formatted(t_ircconnection *co, const char *fmt, ...);
 int		irc_eval_cmd(t_ircconnection *irc);
+int		irc_handle_cmd(t_ircconnection *irc, bool eval);
 int		free_cmd(t_ircconnection *irc);
 
   /* Commands */
 int		irc_join(t_ircconnection *co, const char *chans);
 int		irc_part(t_ircconnection *co, const char *chans);
 int		irc_quit(t_ircconnection *co, const char *reason);
+
+  /* IRC commands */
+int		cmd_join(t_ircconnection *irc);
 
 #endif /* !IRC_H_ */

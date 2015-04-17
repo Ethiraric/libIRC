@@ -51,6 +51,21 @@ int	handle_input(t_ircconnection *irc, char *cmd)
 	  fprintf(stderr, "Missing args for part\n");
 	  return (0);
 	}
+      if (!strncasecmp(cmd, "dump", 4))
+	{
+	  size_t i;
+
+	  for (i = 0 ; i < irc->chanlist.len ; ++i)
+	    {
+	      t_channel *chan;
+	      size_t j;
+
+	      printf("== Chan : `%s`\n", str_str(&irc->chanlist.tab[i].key));
+	      chan = irc->chanlist.tab[i].value;
+	      for (j = 0 ; j < chan->users.len ; ++j)
+		printf("\tUser : `%s`\n", str_str(&chan->users.tab[j].key));
+	    }
+	}
     }
   return (0);
 }
@@ -86,6 +101,11 @@ int	loop(t_ircconnection *irc)
 	      return (1);
 	    }
 	  printf("<< %s\n", irc_get_command(irc));
+	  if (irc_handle_cmd(irc, false))
+	    {
+	      perror("irc_handle_cmd");
+	      return (1);
+	    }
 	}
       free(cmd);
       cmd = NULL;
@@ -124,7 +144,7 @@ int	main(int argc, char **argv)
       if (c == 'p')
 	{
 	  port = atoi(optarg);
-	  if (port > SHRT_MIN || !port)
+	  if (port > USHRT_MAX || !port)
 	    {
 	      fprintf(stderr, "Invalid port : %u\n", port);
 	      return (1);

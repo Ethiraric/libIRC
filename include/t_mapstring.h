@@ -30,6 +30,7 @@ typedef struct		s_mapstring
 void		mapstring_new(t_mapstring *map);
 void		mapstring_delete(t_mapstring *mapstr);
 int		mapstring_realloc(t_mapstring *map, size_t size);
+void		*mapstring_at(t_mapstring *map, size_t idx);
 unsigned int	mapstring_findpos(const t_mapstring *map, const char *key);
 void		*mapstring_findcstr(const t_mapstring *map, const char *key);
 void		*mapstring_find(const t_mapstring *map, const t_string *key);
@@ -44,4 +45,6 @@ int		mapstring_insertnew(t_mapstring *map, const t_string *key,
 				    void *value);
 int		mapstring_insertnewcstr(t_mapstring *map, const char *ckey,
 					void *value);
+size_t		mapstring_size(t_mapstring *map);
+
 #endif /* !T_MAPSTRING_H_ */

@@ -22,13 +22,22 @@
 void		irc_co_new(t_ircconnection *co)
 {
   memset(co, 0, sizeof(t_ircconnection));
+  mapstring_new(&co->chanlist);
 }
 
   /* Delete */
 
 void		irc_co_delete(t_ircconnection *co)
 {
-  mapstring_delete(&co->uchanlist);
+  unsigned int	it;
+
+  it = 0;
+  while (it < mapstring_size(&co->chanlist))
+    {
+      delete_chan(mapstring_at(&co->chanlist, it), true);
+      ++it;
+    }
+  mapstring_delete(&co->chanlist);
   buffer_delete(&co->buff_r);
   buffer_delete(&co->buff_w);
   str_delete(&co->nick);
@@ -36,6 +45,7 @@ void		irc_co_delete(t_ircconnection *co)
   str_delete(&co->realname);
   str_delete(&co->servername);
   free_cmd(co);
+  free(co->command);
 }
 
   /* Connect */

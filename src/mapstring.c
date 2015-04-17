@@ -58,6 +58,13 @@ int		mapstring_realloc(t_mapstring *map, size_t size)
   return (0);
 }
 
+  /* Access */
+
+void		*mapstring_at(t_mapstring *map, size_t idx)
+{
+  return (map->tab[idx].value);
+}
+
   /* Find */
 
 unsigned int	mapstring_findpos(const t_mapstring *map, const char *key)
@@ -119,7 +126,7 @@ int		mapstring_erase(t_mapstring *map, const t_string *key)
 
   pos = mapstring_findpos(map, str_safestr(key));
   if (pos == (unsigned int)(-1))
-    return (1);
+    return (0);
   str_delete(&(map->tab[pos].key));
   memmove(&(map->tab[pos]), &(map->tab[pos + 1]),
       (map->len - pos) * sizeof(t_mapstringpair));
@@ -301,4 +308,11 @@ int		mapstring_insertnewcstr(t_mapstring *map, const char *ckey,
   ret = mapstring_insertnew(map, &key, value);
   str_delete(&key);
   return (ret);
+}
+
+  /* Getters */
+
+size_t		mapstring_size(t_mapstring *map)
+{
+  return (map->len);
 }
