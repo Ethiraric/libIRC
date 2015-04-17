@@ -11,7 +11,8 @@
 NAME		=	libIRC.a
 CC		=	gcc
 AR		=	ar rcs
-override CFLAGS		+=	-W -Wall -Iinclude -D_GNU_SOURCE -ggdb3
+override CFLAGS	+=	-W -Wall -Iinclude -D_GNU_SOURCE -ggdb3
+export CFLAGS
 LDFLAGS		=
 RM		=	@rm -vf
 MAKE		+=	--no-print-directory
