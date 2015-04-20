@@ -27,6 +27,7 @@ void		test_t_string()
   assert(!str_str(&a));
   assert(str_safestr(&a));
   assert(!strcmp(str_safestr(&a), ""));
+  assert(!str_size(&a));
 
   /* ----------------------------- */
 
@@ -55,6 +56,7 @@ void		test_t_string()
   assert(!strcmp(str_str(&b), "coucou"));
   assert(str_size(&b) == 6);
   assert(str_str(&a) == str_str(&b));
+  assert(str_safestr(&a) == str_safestr(&b));
 
   /* ----------------------------- */
 
@@ -72,6 +74,7 @@ void		test_t_string()
   assert(!strcmp(str_str(&b), "coucou"));
   assert(str_size(&b) == 6);
   assert(str_str(&a) != str_str(&b));
+  assert(str_safestr(&a) != str_safestr(&b));
 
   /* ----------------------------- */
 
@@ -82,6 +85,199 @@ void		test_t_string()
   assert(!str_str(&a));
   assert(str_safestr(&a));
   assert(!strcmp(str_safestr(&a), ""));
+  assert(!str_size(&a));
+
+  /* ----------------------------- */
+
+  // Act
+  str_delete(&b);
+
+  // Assert
+  assert(!str_str(&b));
+  assert(str_safestr(&b));
+  assert(!strcmp(str_safestr(&b), ""));
+  assert(!str_size(&a));
+
+  /* ----------------------------- */
+
+  // Act
+  str_delete(&a);
+
+  // Assert
+  assert(!str_str(&a));
+  assert(str_safestr(&a));
+  assert(!strcmp(str_safestr(&a), ""));
+  assert(!str_size(&a));
+
+  /* ----------------------------- */
+
+  // Act
+  if (str_new_withsize(&a, 50))
+    err(1, NULL);
+
+  // Assert
+  assert(str_str(&a));
+  assert(str_safestr(&a));
+  assert(!strcmp(str_safestr(&a), ""));
+  assert(!str_size(&a));
+
+  /* ----------------------------- */
+
+  // Act
+  str_delete(&a);
+
+  // Assert
+  assert(!str_str(&a));
+  assert(str_safestr(&a));
+  assert(!strcmp(str_safestr(&a), ""));
+  assert(!str_size(&a));
+
+  /* ----------------------------- */
+
+  // Act
+  if (str_newfromcstr(&a, "lel") || str_newfromstr(&b, &a) ||
+      str_delete(&a) || str_detach(&b) || str_delete(&b))
+    err(1, NULL);
+
+  // Assert
+  assert(!str_str(&a));
+  assert(str_safestr(&a));
+  assert(!strcmp(str_safestr(&a), ""));
+  assert(!str_size(&a));
+  assert(!str_str(&b));
+  assert(str_safestr(&b));
+  assert(!strcmp(str_safestr(&b), ""));
+  assert(!str_size(&b));
+
+  /* ----------------------------- */
+
+  // Act
+  if (str_newfromcstr(&a, "Hello"))
+    err(1, NULL);
+
+  // Assert
+  assert(str_str(&a));
+  assert(str_safestr(&a));
+  assert(!strcmp(str_str(&a), "Hello"));
+  assert(str_size(&a) == 5);
+
+  /* ----------------------------- */
+
+  // Act
+  if (str_appendcstr(&a, " World!"))
+    err(1, NULL);
+
+  // Assert
+  assert(str_str(&a));
+  assert(str_safestr(&a));
+  assert(!strcmp(str_str(&a), "Hello World!"));
+  assert(str_size(&a) == 12);
+
+  /* ----------------------------- */
+
+  // Act
+  if (str_resize(&a, 10))
+    err(1, NULL);
+
+  // Assert
+  assert(str_str(&a));
+  assert(str_safestr(&a));
+  assert(!strcmp(str_str(&a), "Hello Worl"));
+  assert(str_size(&a) == 10);
+
+  /* ----------------------------- */
+
+  // Act
+  if (str_resize(&a, 50))
+    err(1, NULL);
+
+  // Assert
+  assert(str_str(&a));
+  assert(str_safestr(&a));
+  assert(!strcmp(str_str(&a), "Hello Worl"));
+  assert(str_size(&a) == 10);
+
+  /* ----------------------------- */
+
+  // Act
+  if (str_appendcstr(&a, "d !"))
+    err(1, NULL);
+
+  // Assert
+  assert(str_str(&a));
+  assert(str_safestr(&a));
+  assert(!strcmp(str_str(&a), "Hello World !"));
+  assert(str_size(&a) == 13);
+
+  /* ----------------------------- */
+
+  // Act
+  if (str_copy(&b, &a))
+    err(1, NULL);
+
+  // Assert
+  assert(str_str(&a));
+  assert(str_safestr(&a));
+  assert(!strcmp(str_str(&a), "Hello World !"));
+  assert(str_size(&a) == 13);
+  assert(str_str(&b));
+  assert(str_safestr(&b));
+  assert(!strcmp(str_str(&b), "Hello World !"));
+  assert(str_size(&b) == 13);
+  assert(str_safestr(&a) == str_safestr(&b));
+  assert(str_str(&a) == str_str(&b));
+
+  /* ----------------------------- */
+
+  // Act
+  if (str_copy(&b, &a))
+    err(1, NULL);
+
+  // Assert
+  assert(str_str(&a));
+  assert(str_safestr(&a));
+  assert(!strcmp(str_str(&a), "Hello World !"));
+  assert(str_size(&a) == 13);
+  assert(str_str(&b));
+  assert(str_safestr(&b));
+  assert(!strcmp(str_str(&b), "Hello World !"));
+  assert(str_size(&b) == 13);
+  assert(str_safestr(&a) == str_safestr(&b));
+  assert(str_str(&a) == str_str(&b));
+
+  /* ----------------------------- */
+
+  // Act
+  if (str_appendcstr(&b, " =)"))
+    err(1, NULL);
+
+  // Assert
+  assert(str_str(&a));
+  assert(str_safestr(&a));
+  assert(!strcmp(str_str(&a), "Hello World !"));
+  assert(str_size(&a) == 13);
+  assert(str_str(&b));
+  assert(str_safestr(&b));
+  assert(!strcmp(str_str(&b), "Hello World ! =)"));
+  assert(str_size(&b) == 16);
+  assert(str_safestr(&a) != str_safestr(&b));
+  assert(str_str(&a) != str_str(&b));
+
+  /* ----------------------------- */
+
+  // Act
+  str_delete(&a);
+  str_delete(&b);
+
+  // Assert
+  assert(!str_str(&a));
+  assert(str_safestr(&a));
+  assert(!strcmp(str_safestr(&a), ""));
+  assert(!str_size(&a));
+  assert(!str_str(&b));
+  assert(str_safestr(&b));
+  assert(!strcmp(str_safestr(&b), ""));
+  assert(!str_size(&b));
 }
 
 int		main()

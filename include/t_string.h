@@ -39,6 +39,7 @@ typedef struct	s_string
 void		str_new(t_string *str);
 int		str_newfromstr(t_string *dst, const t_string *src);
 int		str_newfromcstr(t_string *ret, const char *str);
+int		str_new_withsize(t_string *dst, size_t size);
 int		str_delete(t_string *ret);
 int		str_resize(t_string *str, size_t newsize);
 int		str_copy(t_string *dst, const t_string *src);
