@@ -5,7 +5,7 @@
 ## Login   <sabour_f@epitech.net>
 ##
 ## Started on  Tue Apr 14 15:47:15 2015 Florian SABOURIN
-## Last update Fri Apr 17 12:18:45 2015 Florian SABOURIN
+## Last update Mon Apr 20 10:40:31 2015 Florian SABOURIN
 ##
 
 NAME		=	libIRC.a
@@ -16,7 +16,6 @@ export CFLAGS
 LDFLAGS		=
 RM		=	@rm -vf
 MAKE		+=	--no-print-directory
-OUT		=	out
 
 SRC		=	src/buffer.c
 SRC		+=	src/string.c
@@ -29,9 +28,9 @@ SRC		+=	src/irc_eval_cmd.c
 SRC		+=	src/irc_handle_cmd.c
 SRC		+=	src/irc_cmd_join.c
 
-OBJ		=	$(addprefix $(OUT)/, $(notdir $(SRC:.c=.o)))
+OBJ		=	$(SRC:.c=.o)
 
-$(OUT)/%.o:	src/%.c
+%.o:	%.c
 	$(CC) -c $(CFLAGS)            -o $@ $^
 
 $(NAME):	$(OBJ)
@@ -40,15 +39,19 @@ $(NAME):	$(OBJ)
 all:	$(NAME)
 
 tests:
-	@$(MAKE) -C tests
+	@$(MAKE) clean
+	@$(MAKE) CFLAGS='-fprofile-arcs -ftest-coverage' do_tests
+
+do_tests:	$(NAME)
+	$(CC) -c $(CFLAGS)            -o src/tests.o src/tests.c
+	$(CC) -fprofile-arcs -ftest-coverage -o tests $(OBJ) src/tests.o
+	@echo "./tests && gcov */*.gcda && mkdir -p gcov && mv *.gcov gcov && rm src/*.gcno src/*.gcda" > do_tests.sh && chmod +x do_tests.sh
 
 clean:
-	$(RM) $(OBJ)
-	@$(MAKE) -C tests clean
+	$(RM) $(OBJ) src/tests.o
 
 fclean: clean
-	$(RM) $(NAME) a.out
-	@$(MAKE) -C tests fclean
+	$(RM) $(NAME) a.out tests do_tests.sh $(SRC:.c=.gcda) src/tests.gcda
 
 ex:	$(NAME)
 	$(CC) main.c $(CFLAGS) -L. -lIRC
