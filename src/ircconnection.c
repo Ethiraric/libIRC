@@ -46,6 +46,8 @@ void		irc_co_delete(t_ircconnection *co)
   str_delete(&co->servername);
   free_cmd(co);
   free(co->command);
+  free(co->nfo.mode_letters);
+  free(co->nfo.mode_prefix);
 }
 
   /* Connect */

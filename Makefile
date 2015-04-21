@@ -26,7 +26,10 @@ SRC		+=	src/ircconnection.c
 SRC		+=	src/irc_commands.c
 SRC		+=	src/irc_eval_cmd.c
 SRC		+=	src/irc_handle_cmd.c
+SRC		+=	src/mode_utils.c
 SRC		+=	src/irc_cmd_join.c
+SRC		+=	src/irc_cmd_005.c
+SRC		+=	src/irc_cmd_353.c
 
 OBJ		=	$(SRC:.c=.o)
 
@@ -51,7 +54,7 @@ clean:
 	$(RM) $(OBJ) src/tests.o
 
 fclean: clean
-	$(RM) $(NAME) a.out tests do_tests.sh $(SRC:.c=.gcda) src/tests.gcda
+	$(RM) $(NAME) a.out tests do_tests.sh $(SRC:.c=.gcda) src/tests.gcda $(SRC:.c=.gcno) src/tests.gcno
 
 ex:	$(NAME)
 	$(CC) main.c $(CFLAGS) -L. -lIRC

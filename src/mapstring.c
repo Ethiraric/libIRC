@@ -294,7 +294,11 @@ int		mapstring_insertnew(t_mapstring *map, const t_string *key,
 	return (2);
       return (mapstring_insertat(map, pos, key, value));
     }
-  return (str_newfromstr(&map->tab[pos].key, key));
+  if (str_newfromstr(&map->tab[pos].key, key))
+    return (1);
+  map->tab[pos].value = value;
+  ++map->len;
+  return (0);
 }
 
 int		mapstring_insertnewcstr(t_mapstring *map, const char *ckey,

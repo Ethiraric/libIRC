@@ -19,6 +19,28 @@
 
 typedef unsigned int	t_mode;
 
+#define MODE_V		0
+#define MODE_V_MASK	(1 << MODE_V)
+#define MODE_V_CHAR	'v'
+
+#define MODE_H		1
+#define MODE_H_MASK	(1 << MODE_H)
+#define MODE_H_CHAR	'h'
+
+#define MODE_O		2
+#define MODE_O_MASK	(1 << MODE_O)
+#define MODE_O_CHAR	'o'
+
+#define MODE_A		3
+#define MODE_A_MASK	(1 << MODE_A)
+#define MODE_A_CHAR	'a'
+
+#define MODE_Q		4
+#define MODE_Q_MASK	(1 << MODE_Q)
+#define MODE_Q_CHAR	'q'
+
+#define MODE_MAX	5
+
   /* A user on a channel */
 typedef struct	s_user
 {
@@ -45,6 +67,12 @@ typedef struct	s_channel
 void		new_chan(t_channel *chan);
 int		delete_chan(t_channel *chan, bool free_struct);
 
+typedef struct	s_ircnfo
+{
+  char		*mode_letters;
+  char		*mode_prefix;
+}		t_ircnfo;
+
 typedef struct	s_command
 {
   unsigned int	argc;
@@ -60,6 +88,7 @@ typedef struct		s_ircconnection
   struct sockaddr_in	sin;
   t_mapstring		chanlist;
   t_command		cmd;
+  t_ircnfo		nfo;
   t_buffer		buff_w;
   t_buffer		buff_r;
   t_string		nick;
@@ -97,5 +126,12 @@ int		irc_quit(t_ircconnection *co, const char *reason);
 
   /* IRC commands */
 int		cmd_join(t_ircconnection *irc);
+int		cmd_005(t_ircconnection *irc);
+int		cmd_353(t_ircconnection *irc);
+
+  /* Mode helpers */
+t_mode		irc_mode_mask(t_mode in);
+t_mode		irc_mode_fromchar(int c);
+t_mode		irc_mode_fromsym(t_ircconnection *irc, int c);
 
 #endif /* !IRC_H_ */
