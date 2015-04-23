@@ -17,12 +17,86 @@ int		irc_join(t_ircconnection *co, const char *chans)
   return (irc_send_formatted(co, "JOIN %s\r\n", chans));
 }
 
-int		irc_part(t_ircconnection *co, const char *chans)
+int		irc_part(t_ircconnection *co, const char *chans, char *reason)
 {
-  return (irc_send_formatted(co, "PART %s\r\n", chans));
+  if (!reason)
+    return (irc_send_formatted(co, "PART %s\r\n", chans));
+  return (irc_send_formatted(co, "PART %s :%s\r\n", chans, reason));
 }
 
 int		irc_quit(t_ircconnection *co, const char *reason)
 {
-  return (irc_send_formatted(co, "QUIT %s\r\n", reason));
+  if (!reason)
+    return (irc_send_formatted(co, "QUIT\r\n"));
+  return (irc_send_formatted(co, "QUIT :%s\r\n", reason));
+}
+
+int		irc_mode(t_ircconnection *co, const char *chan,
+			 const char *modes, const char *nicks)
+{
+  if (!chan)
+    return (irc_send_formatted(co, "MODE %s\r\n", modes));
+  if (!nicks)
+    return (irc_send_formatted(co, "MODE %s %s\r\n", chan, modes));
+  return (irc_send_formatted(co, "MODE %s %s %s\r\n", chan, modes, nicks));
+}
+
+int		irc_voice(t_ircconnection *co, const char *chan,
+			  const char *nick)
+{
+  return (irc_send_formatted(co, "MODE %s +v %s\r\n", chan, nick));
+}
+
+int		irc_devoice(t_ircconnection *co, const char *chan,
+			    const char *nick)
+{
+  return (irc_send_formatted(co, "MODE %s -v %s\r\n", chan, nick));
+}
+
+int		irc_hop(t_ircconnection *co, const char *chan,
+		       const char *nick)
+{
+  return (irc_send_formatted(co, "MODE %s +h %s\r\n", chan, nick));
+}
+
+int		irc_dehop(t_ircconnection *co, const char *chan,
+			  const char *nick)
+{
+  return (irc_send_formatted(co, "MODE %s -h %s\r\n", chan, nick));
+}
+
+int		irc_op(t_ircconnection *co, const char *chan,
+		       const char *nick)
+{
+  return (irc_send_formatted(co, "MODE %s +o %s\r\n", chan, nick));
+}
+
+int		irc_deop(t_ircconnection *co, const char *chan,
+			 const char *nick)
+{
+  return (irc_send_formatted(co, "MODE %s -o %s\r\n", chan, nick));
+}
+
+int		irc_admin(t_ircconnection *co, const char *chan,
+			  const char *nick)
+{
+  return (irc_send_formatted(co, "MODE %s +a %s\r\n", chan, nick));
+}
+
+int		irc_deadmin(t_ircconnection *co, const char *chan,
+			    const char *nick)
+{
+  return (irc_send_formatted(co, "MODE %s -a %s\r\n", chan, nick));
+}
+
+int		irc_creator(t_ircconnection *co, const char *chan,
+			    const char *nick)
+{
+  return (irc_send_formatted(co, "MODE %s +q %s\r\n", chan, nick));
+}
+
+int		irc_decreator(t_ircconnection *co, const char *chan,
+			      const char *nick)
+{
+  return (irc_send_formatted(co, "MODE %s -q %s\r\n", chan, nick));
 }

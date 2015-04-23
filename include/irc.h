@@ -124,8 +124,30 @@ void		irc_dump_stats();
 
   /* Commands */
 int		irc_join(t_ircconnection *co, const char *chans);
-int		irc_part(t_ircconnection *co, const char *chans);
+int		irc_part(t_ircconnection *co, const char *chans, char *reason);
 int		irc_quit(t_ircconnection *co, const char *reason);
+int		irc_mode(t_ircconnection *co, const char *chan,
+			 const char *modes, const char *nicks);
+int		irc_voice(t_ircconnection *co, const char *chan,
+			  const char *nick);
+int		irc_devoice(t_ircconnection *co, const char *chan,
+			    const char *nick);
+int		irc_hop(t_ircconnection *co, const char *chan,
+			const char *nick);
+int		irc_dehop(t_ircconnection *co, const char *chan,
+			  const char *nick);
+int		irc_op(t_ircconnection *co, const char *chan,
+		       const char *nick);
+int		irc_deop(t_ircconnection *co, const char *chan,
+			 const char *nick);
+int		irc_admin(t_ircconnection *co, const char *chan,
+			  const char *nick);
+int		irc_deadmin(t_ircconnection *co, const char *chan,
+			    const char *nick);
+int		irc_creator(t_ircconnection *co, const char *chan,
+			    const char *nick);
+int		irc_decreator(t_ircconnection *co, const char *chan,
+			      const char *nick);
 
   /* IRC commands */
 int		cmd_join(t_ircconnection *irc);
