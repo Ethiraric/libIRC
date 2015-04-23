@@ -12,14 +12,23 @@
 #include <string.h>
 #include "irc.h"
 
+static unsigned int	stattab[] =
+{
+  0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0
+};
+
 static const char	*cmdtab[] =
 {
-  "JOIN", "PART", "QUIT", "MODE", "005", "353", NULL
+  "PING", "JOIN", "PART", "QUIT", "MODE", "005", "353",
+  NULL
 };
 
 static int (* const fcttab[])(t_ircconnection *irc) =
 {
-  &cmd_join, &cmd_part, &cmd_quit, &cmd_mode, &cmd_005, &cmd_353, NULL
+  &cmd_ping, &cmd_join, &cmd_part, &cmd_quit, &cmd_mode, &cmd_005, &cmd_353,
+  NULL
 };
 
 int		irc_handle_cmd(t_ircconnection *irc, bool eval)
@@ -28,12 +37,31 @@ int		irc_handle_cmd(t_ircconnection *irc, bool eval)
 
   if (eval && irc_eval_cmd(irc))
     return (1);
+  if (!strcasecmp(irc->cmd.cmd, "PRIVMSG"))
+    return (0);
   i = 0;
   while (cmdtab[i])
     {
       if (!strcasecmp(irc->cmd.cmd, cmdtab[i]))
-	return (fcttab[i](irc));
+	{
+	  ++(stattab[i]);
+	  return (fcttab[i](irc));
+	}
       ++i;
     }
   return (0);
+}
+
+#include <stdio.h>
+void		irc_dump_stats()
+{
+  unsigned int	i;
+
+  i = 0;
+  while (cmdtab[i])
+    {
+      if (stattab[i])
+	printf("%s -> %u calls\n", cmdtab[i], stattab[i]);
+      ++i;
+    }
 }

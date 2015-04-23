@@ -201,6 +201,7 @@ int	main(int argc, char **argv)
       loop(&irc);
       irc_disconnect(&irc);
       irc_co_delete(&irc);
+      irc_dump_stats();
       return (0);
     }
   return (1);

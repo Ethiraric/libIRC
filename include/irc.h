@@ -119,6 +119,9 @@ int		irc_eval_cmd(t_ircconnection *irc);
 int		irc_handle_cmd(t_ircconnection *irc, bool eval);
 int		free_cmd(t_ircconnection *irc);
 
+//TODO: Temporary
+void		irc_dump_stats();
+
   /* Commands */
 int		irc_join(t_ircconnection *co, const char *chans);
 int		irc_part(t_ircconnection *co, const char *chans);
@@ -129,6 +132,7 @@ int		cmd_join(t_ircconnection *irc);
 int		cmd_part(t_ircconnection *irc);
 int		cmd_quit(t_ircconnection *irc);
 int		cmd_mode(t_ircconnection *irc);
+int		cmd_ping(t_ircconnection *irc);
 int		cmd_005(t_ircconnection *irc);
 int		cmd_353(t_ircconnection *irc);
 

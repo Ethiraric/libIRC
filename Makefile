@@ -27,6 +27,7 @@ SRC		+=	src/irc_commands.c
 SRC		+=	src/irc_eval_cmd.c
 SRC		+=	src/irc_handle_cmd.c
 SRC		+=	src/mode_utils.c
+SRC		+=	src/irc_cmd_ping.c
 SRC		+=	src/irc_cmd_join.c
 SRC		+=	src/irc_cmd_part.c
 SRC		+=	src/irc_cmd_quit.c
