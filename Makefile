@@ -11,7 +11,7 @@
 NAME		=	libIRC.a
 CC		=	gcc
 AR		=	ar rcs
-override CFLAGS	+=	-W -Wall -Iinclude -D_GNU_SOURCE -ggdb3
+override CFLAGS	+=	-W -Wall -Iinclude -D_GNU_SOURCE
 export CFLAGS
 LDFLAGS		=
 RM		=	@rm -vf
@@ -28,6 +28,9 @@ SRC		+=	src/irc_eval_cmd.c
 SRC		+=	src/irc_handle_cmd.c
 SRC		+=	src/mode_utils.c
 SRC		+=	src/irc_cmd_join.c
+SRC		+=	src/irc_cmd_part.c
+SRC		+=	src/irc_cmd_quit.c
+SRC		+=	src/irc_cmd_mode.c
 SRC		+=	src/irc_cmd_005.c
 SRC		+=	src/irc_cmd_353.c
 
@@ -56,8 +59,9 @@ clean:
 fclean: clean
 	$(RM) $(NAME) a.out tests do_tests.sh $(SRC:.c=.gcda) src/tests.gcda $(SRC:.c=.gcno) src/tests.gcno
 
-ex:	$(NAME)
-	$(CC) main.c $(CFLAGS) -L. -lIRC
+ex:
+	@$(MAKE) CFLAGS=-ggdb3
+	$(CC) main.c $(CFLAGS) -ggdb3 -L. -lIRC
 
 re:	fclean all
 

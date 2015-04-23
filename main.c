@@ -63,8 +63,13 @@ int	handle_input(t_ircconnection *irc, char *cmd)
 	      printf("== Chan : `%s`\n", str_str(&irc->chanlist.tab[i].key));
 	      chan = irc->chanlist.tab[i].value;
 	      for (j = 0 ; j < chan->users.len ; ++j)
-		printf("\tUser : `%s` (%o)\n", str_str(&chan->users.tab[j].key),
-		       ((t_user *)chan->users.tab[j].value)->chanmode);
+		{
+		  char syms[12];
+
+		  irc_modes_tosyms(irc, ((t_user *)chan->users.tab[j].value)->chanmode, syms);
+		  printf("\tUser : `%s` (%s)\n", str_str(&chan->users.tab[j].key),
+			 syms);
+		}
 	    }
 	}
     }

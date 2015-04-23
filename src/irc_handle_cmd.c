@@ -14,12 +14,12 @@
 
 static const char	*cmdtab[] =
 {
-  "JOIN", "005", "353", NULL
+  "JOIN", "PART", "QUIT", "MODE", "005", "353", NULL
 };
 
 static int (* const fcttab[])(t_ircconnection *irc) =
 {
-  &cmd_join,&cmd_005, &cmd_353, NULL
+  &cmd_join, &cmd_part, &cmd_quit, &cmd_mode, &cmd_005, &cmd_353, NULL
 };
 
 int		irc_handle_cmd(t_ircconnection *irc, bool eval)

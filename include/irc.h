@@ -126,12 +126,19 @@ int		irc_quit(t_ircconnection *co, const char *reason);
 
   /* IRC commands */
 int		cmd_join(t_ircconnection *irc);
+int		cmd_part(t_ircconnection *irc);
+int		cmd_quit(t_ircconnection *irc);
+int		cmd_mode(t_ircconnection *irc);
 int		cmd_005(t_ircconnection *irc);
 int		cmd_353(t_ircconnection *irc);
 
   /* Mode helpers */
 t_mode		irc_mode_mask(t_mode in);
-t_mode		irc_mode_fromchar(int c);
-t_mode		irc_mode_fromsym(t_ircconnection *irc, int c);
+t_mode		irc_mode_fromchar(char c);
+t_mode		irc_mode_fromsym(t_ircconnection *irc, char c);
+char		irc_char_frommask(t_mode mode);
+char		irc_char_frommask(t_mode mode);
+void		irc_modes_tosyms(t_ircconnection *irc, t_mode mode, char *dst);
+char		irc_sym_fromchar(t_ircconnection *irc, char c);
 
 #endif /* !IRC_H_ */
