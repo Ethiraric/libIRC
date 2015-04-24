@@ -146,6 +146,11 @@ int		irc_disconnect(t_ircconnection *co)
 
   /* Sending datas */
 
+size_t		irc_send_buff_len(t_ircconnection *co)
+{
+  return (buffer_size(&co->buff_w));
+}
+
 int		irc_send(t_ircconnection *co)
 {
   int		ret;

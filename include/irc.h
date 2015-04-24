@@ -118,6 +118,7 @@ int		irc_send_formatted(t_ircconnection *co, const char *fmt, ...);
 int		irc_eval_cmd(t_ircconnection *irc);
 int		irc_handle_cmd(t_ircconnection *irc, bool eval);
 int		free_cmd(t_ircconnection *irc);
+size_t		irc_send_buff_len(t_ircconnection *co);
 
 //TODO: Temporary
 void		irc_dump_stats();
