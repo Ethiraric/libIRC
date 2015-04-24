@@ -237,3 +237,10 @@ const char	*irc_get_command(const t_ircconnection *co)
 {
   return (co->command);
 }
+
+  /* Getters / setters */
+
+int		irc_get_socket(const t_ircconnection *co)
+{
+  return (co->socket);
+}
