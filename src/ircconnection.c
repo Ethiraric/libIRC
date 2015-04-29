@@ -42,6 +42,7 @@ void		irc_co_delete(t_ircconnection *co)
   buffer_delete(&co->buff_w);
   str_delete(&co->nick);
   str_delete(&co->user);
+  str_delete(&co->pass);
   str_delete(&co->realname);
   str_delete(&co->servername);
   free_cmd(co);
@@ -200,8 +201,8 @@ int		irc_recv(t_ircconnection *co)
   int		ret;
 
   ret = recv(co->socket, buff, 512, MSG_DONTWAIT);
-  if (ret == -1)
-    return (0);
+  if (ret == -1 || !ret)
+    return (-1);
   if (buffer_append(&co->buff_r, buff, ret))
     return (1);
   return(0);
