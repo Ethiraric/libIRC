@@ -77,6 +77,7 @@ typedef struct	s_command
 {
   unsigned int	argc;
   char		*prefix;
+  char		*prefixnick;
   char		*cmd;
   char		**args;
   char		*dup;
