@@ -31,6 +31,11 @@ int		irc_quit(t_ircconnection *co, const char *reason)
   return (irc_send_formatted(co, "QUIT :%s\r\n", reason));
 }
 
+int		irc_msg(t_ircconnection *co, const char *dst, const char *msg)
+{
+  return (irc_send_formatted(co, "PRIVMSG %s :%s\r\n", dst, msg));
+}
+
 int		irc_mode(t_ircconnection *co, const char *chan,
 			 const char *modes, const char *nicks)
 {
