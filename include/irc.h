@@ -130,6 +130,8 @@ int		irc_join(t_ircconnection *co, const char *chans);
 int		irc_part(t_ircconnection *co, const char *chans, char *reason);
 int		irc_quit(t_ircconnection *co, const char *reason);
 int		irc_msg(t_ircconnection *co, const char *dst, const char *msg);
+int		irc_msgf(t_ircconnection *co, const char *dst,
+			 const char *fmt, ...);
 int		irc_mode(t_ircconnection *co, const char *chan,
 			 const char *modes, const char *nicks);
 int		irc_voice(t_ircconnection *co, const char *chan,

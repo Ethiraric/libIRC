@@ -8,6 +8,7 @@
 ** Last update Thu Apr 16 13:36:56 2015 Florian SABOURIN
 */
 
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "irc.h"
@@ -34,6 +35,23 @@ int		irc_quit(t_ircconnection *co, const char *reason)
 int		irc_msg(t_ircconnection *co, const char *dst, const char *msg)
 {
   return (irc_send_formatted(co, "PRIVMSG %s :%s\r\n", dst, msg));
+}
+
+int		irc_msgf(t_ircconnection *co, const char *dst,
+			 const char *fmt, ...)
+{
+  va_list	va;
+  char		*msg;
+  int		ret;
+
+  va_start(va, fmt);
+  ret = vasprintf(&msg, fmt, va);
+  va_end(va);
+  if (ret == -1)
+    return (1);
+  ret = irc_msg(co, dst, msg);
+  free(msg);
+  return (ret);
 }
 
 int		irc_mode(t_ircconnection *co, const char *chan,
