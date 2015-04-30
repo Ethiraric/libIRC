@@ -18,6 +18,8 @@ int		free_cmd(t_ircconnection *irc)
   irc->cmd.args = 0;
   free(irc->cmd.dup);
   irc->cmd.dup = 0;
+  free(irc->cmd.prefixnick);
+  irc->cmd.prefixnick = 0;
   irc->cmd.prefix = 0;
   irc->cmd.cmd = 0;
   irc->cmd.argc = 0;
@@ -91,6 +93,7 @@ static int	irc_eval_args(t_ircconnection *irc, char *str)
 int		irc_eval_cmd(t_ircconnection *irc)
 {
   char		*now;
+  char		*unused;
   int		ret;
 
   if (!irc->command)
@@ -107,6 +110,10 @@ int		irc_eval_cmd(t_ircconnection *irc)
       now = strtok(NULL, " ");
       if (!now)
 	return (free_cmd(irc));
+      irc->cmd.prefixnick = strdup(irc->cmd.prefix);
+      if (!irc->cmd.prefixnick)
+	return (free_cmd(irc) | 1);
+      irc->cmd.prefixnick = strtok_r(irc->cmd.prefixnick, "@!", &unused);
     }
   irc->cmd.cmd = now;
   ret = irc_eval_args(irc, strtok(0, ""));
