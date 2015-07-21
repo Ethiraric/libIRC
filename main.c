@@ -86,6 +86,7 @@ int	loop(t_ircconnection *irc)
   cmd = NULL;
   end = NULL;
   l = 0;
+  errno = 0;
   printf(">> ");
   while (getline(&cmd, &l, stdin) && *cmd)
     {
@@ -95,7 +96,7 @@ int	loop(t_ircconnection *irc)
 	error(1, errno, "malloc");
       if (irc_send(irc))
 	error(1, errno, "irc_send");
-      if (irc_recv(irc))
+      if (irc_recv(irc) == 1)
 	error(1, errno, "irc_recv");
       if (irc_parse_command(irc))
 	error(1, errno, "malloc");

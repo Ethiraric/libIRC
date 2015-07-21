@@ -32,6 +32,7 @@ SRC		+=	src/irc_cmd_join.c
 SRC		+=	src/irc_cmd_part.c
 SRC		+=	src/irc_cmd_quit.c
 SRC		+=	src/irc_cmd_mode.c
+SRC		+=	src/irc_cmd_nick.c
 SRC		+=	src/irc_cmd_005.c
 SRC		+=	src/irc_cmd_353.c
 

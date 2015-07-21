@@ -163,6 +163,7 @@ int		cmd_mode(t_ircconnection *irc);
 int		cmd_ping(t_ircconnection *irc);
 int		cmd_005(t_ircconnection *irc);
 int		cmd_353(t_ircconnection *irc);
+int		cmd_nick(t_ircconnection *irc);
 
   /* Mode helpers */
 t_mode		irc_mode_mask(t_mode in);

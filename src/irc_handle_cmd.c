@@ -22,12 +22,14 @@ static unsigned int	stattab[] =
 static const char	*cmdtab[] =
 {
   "PING", "JOIN", "PART", "QUIT", "MODE", "005", "353",
+  "NICK",
   NULL
 };
 
 static int (* const fcttab[])(t_ircconnection *irc) =
 {
   &cmd_ping, &cmd_join, &cmd_part, &cmd_quit, &cmd_mode, &cmd_005, &cmd_353,
+  &cmd_nick,
   NULL
 };
 
