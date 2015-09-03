@@ -35,6 +35,7 @@ SRC		+=	src/irc_cmd_mode.c
 SRC		+=	src/irc_cmd_nick.c
 SRC		+=	src/irc_cmd_005.c
 SRC		+=	src/irc_cmd_353.c
+SRC		+=	src/irc_cmd_kick.c
 
 OBJ		=	$(SRC:.c=.o)
 
