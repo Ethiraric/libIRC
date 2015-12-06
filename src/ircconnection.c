@@ -183,16 +183,8 @@ int		irc_send(t_ircconnection *co)
 
 int		irc_send_raw(t_ircconnection *co, const void *dat, size_t len)
 {
-  if (co->accepted)
-    {
-      if (buffer_append(&co->buff_w, dat, len))
-	return (1);
-    }
-  else
-    {
-      if (buffer_append(&co->buff_infos, dat, len))
-	return (1);
-    }
+  if (buffer_append(&co->buff_w, dat, len))
+    return (1);
   return (0);
 }
 
