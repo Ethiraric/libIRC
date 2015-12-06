@@ -61,7 +61,7 @@ static int	apply_chanmodes(t_ircconnection *irc, t_channel *chan)
   return (0);
 }
 
-int		cmd_mode(t_ircconnection *irc)
+int		irc_cmd_mode(t_ircconnection *irc)
 {
   t_channel	*chan;
 

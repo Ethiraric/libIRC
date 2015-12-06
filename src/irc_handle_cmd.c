@@ -28,8 +28,8 @@ static const char	*cmdtab[] =
 
 static int (* const fcttab[])(t_ircconnection *irc) =
 {
-  &cmd_ping, &cmd_join, &cmd_part, &cmd_quit, &cmd_mode, &cmd_005, &cmd_353,
-  &cmd_nick, &cmd_kick,
+  &irc_cmd_ping, &irc_cmd_join, &irc_cmd_part, &irc_cmd_quit, &irc_cmd_mode, &irc_cmd_005, &irc_cmd_353,
+  &irc_cmd_nick, &irc_cmd_kick,
   NULL
 };
 

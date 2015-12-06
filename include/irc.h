@@ -158,16 +158,16 @@ int		irc_decreator(t_ircconnection *co, const char *chan,
 			      const char *nick);
 
   /* IRC commands */
-int		cmd_join(t_ircconnection *irc);
-int		cmd_part(t_ircconnection *irc);
-int		cmd_quit(t_ircconnection *irc);
-int		cmd_mode(t_ircconnection *irc);
-int		cmd_ping(t_ircconnection *irc);
-int		cmd_001(t_ircconnection *irc);
-int		cmd_005(t_ircconnection *irc);
-int		cmd_353(t_ircconnection *irc);
-int		cmd_nick(t_ircconnection *irc);
-int		cmd_kick(t_ircconnection *irc);
+int		irc_cmd_join(t_ircconnection *irc);
+int		irc_cmd_part(t_ircconnection *irc);
+int		irc_cmd_quit(t_ircconnection *irc);
+int		irc_cmd_mode(t_ircconnection *irc);
+int		irc_cmd_ping(t_ircconnection *irc);
+int		irc_cmd_001(t_ircconnection *irc);
+int		irc_cmd_005(t_ircconnection *irc);
+int		irc_cmd_353(t_ircconnection *irc);
+int		irc_cmd_nick(t_ircconnection *irc);
+int		irc_cmd_kick(t_ircconnection *irc);
 
   /* Mode helpers */
 t_mode		irc_mode_mask(t_mode in);

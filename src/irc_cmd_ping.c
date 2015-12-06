@@ -10,7 +10,7 @@
 
 #include "irc.h"
 
-int		cmd_ping(t_ircconnection *irc)
+int		irc_cmd_ping(t_ircconnection *irc)
 {
   if (!irc->cmd.argc)
     return (irc_send_formatted(irc, "PONG\r\n"));

@@ -45,7 +45,7 @@ static int	someone_got_kicked(t_ircconnection *irc, const char *username,
   return (0);
 }
 
-int		cmd_kick(t_ircconnection *irc)
+int		irc_cmd_kick(t_ircconnection *irc)
 {
   const char	*chan;
   const char	*user;

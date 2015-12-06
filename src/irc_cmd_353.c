@@ -37,7 +37,7 @@ static int	join_one_user(t_ircconnection *irc, t_channel *chan, char *s)
   return (0);
 }
 
-int		cmd_353(t_ircconnection *irc)
+int		irc_cmd_353(t_ircconnection *irc)
 {
   t_channel	*chan;
   char		*str;

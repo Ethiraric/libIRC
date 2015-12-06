@@ -14,7 +14,7 @@
 ** When we receive 001 message
 ** This means that the server accepted our connection
 */
-int		cmd_001(t_ircconnection *irc)
+int		irc_cmd_001(t_ircconnection *irc)
 {
   irc->accepted = true;
   return (0);

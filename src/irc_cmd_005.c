@@ -54,7 +54,7 @@ static int	cmd_005_prefix(t_ircconnection *irc, char *str)
   return (0);
 }
 
-int		cmd_005(t_ircconnection *irc)
+int		irc_cmd_005(t_ircconnection *irc)
 {
   unsigned int	i;
 

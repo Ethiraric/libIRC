@@ -127,7 +127,7 @@ static int	user_part_chan(t_ircconnection *irc)
   return (0);
 }
 
-int		cmd_part(t_ircconnection *irc)
+int		irc_cmd_part(t_ircconnection *irc)
 {
   if (irc->cmd.argc == 0 || !irc->cmd.prefix)
     return (0);

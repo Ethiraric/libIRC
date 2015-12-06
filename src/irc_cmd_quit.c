@@ -25,7 +25,7 @@ static int	quit_one_chan(t_ircconnection *irc, t_channel *chan)
   return (0);
 }
 
-int		cmd_quit(t_ircconnection *irc)
+int		irc_cmd_quit(t_ircconnection *irc)
 {
   size_t	it;
   char		*end;

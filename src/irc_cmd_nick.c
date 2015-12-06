@@ -31,7 +31,7 @@ static int	change_one_chan(t_channel *chan, char *oldnick, char *newnick)
   return (0);
 }
 
-int		cmd_nick(t_ircconnection *irc)
+int		irc_cmd_nick(t_ircconnection *irc)
 {
   unsigned int	i;
   t_channel	*chan;

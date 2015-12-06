@@ -122,7 +122,7 @@ static int	user_join_new_chan(t_ircconnection *irc)
   return (0);
 }
 
-int		cmd_join(t_ircconnection *irc)
+int		irc_cmd_join(t_ircconnection *irc)
 {
   if (irc->cmd.argc == 0 || !irc->cmd.prefix)
     return (0);
