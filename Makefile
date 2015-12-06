@@ -4,69 +4,128 @@
 ## Made by Florian SABOURIN
 ## Login   <sabour_f@epitech.net>
 ##
-## Started on  Tue Apr 14 15:47:15 2015 Florian SABOURIN
-## Last update Mon Apr 20 10:40:31 2015 Florian SABOURIN
+## Started on  Sun Dec 06 08:49:49 2015 Florian SABOURIN
+## Last update Sun Dec 06 08:49:49 2015 Florian SABOURIN
 ##
 
-NAME		=	libIRC.a
+# Executables
 CC		=	gcc
+CXX		=	g++
 AR		=	ar rcs
-override CFLAGS	+=	-W -Wall -Iinclude -D_GNU_SOURCE
-export CFLAGS
-LDFLAGS		=
 RM		=	@rm -vf
 MAKE		+=	--no-print-directory
 
-SRC		=	src/buffer.c
-SRC		+=	src/string.c
-SRC		+=	src/mapstring.c
-SRC		+=	src/user.c
-SRC		+=	src/channel.c
-SRC		+=	src/ircconnection.c
-SRC		+=	src/irc_commands.c
-SRC		+=	src/irc_eval_cmd.c
-SRC		+=	src/irc_handle_cmd.c
-SRC		+=	src/mode_utils.c
-SRC		+=	src/irc_cmd_ping.c
-SRC		+=	src/irc_cmd_join.c
-SRC		+=	src/irc_cmd_part.c
-SRC		+=	src/irc_cmd_quit.c
-SRC		+=	src/irc_cmd_mode.c
-SRC		+=	src/irc_cmd_nick.c
-SRC		+=	src/irc_cmd_001.c
-SRC		+=	src/irc_cmd_005.c
-SRC		+=	src/irc_cmd_353.c
-SRC		+=	src/irc_cmd_kick.c
+# Names
+LIBNAME		=	libIRC.a
 
-OBJ		=	$(SRC:.c=.o)
+# Flags
+CFLAGS		=	-W -Wall -Wshadow -fno-diagnostics-show-caret -D_GNU_SOURCE -Iinclude 
+CXXFLAGS	=	-W -Wall -Wshadow -fno-diagnostics-show-caret -D_GNU_SOURCE -Iinclude 
+LDFLAGS		=	
 
-%.o:	%.c
-	$(CC) -c $(CFLAGS)            -o $@ $^
+# Files
+CSRC		=	src/irc_cmd_353.c
+CSRC		+=	src/irc_cmd_kick.c
+CSRC		+=	src/ircconnection.c
+CSRC		+=	src/irc_cmd_quit.c
+CSRC		+=	src/irc_cmd_ping.c
+CSRC		+=	src/string.c
+CSRC		+=	src/buffer.c
+CSRC		+=	src/irc_eval_cmd.c
+CSRC		+=	src/irc_cmd_nick.c
+CSRC		+=	src/irc_cmd_mode.c
+CSRC		+=	src/mapstring.c
+CSRC		+=	src/tests.c
+CSRC		+=	src/irc_cmd_join.c
+CSRC		+=	src/user.c
+CSRC		+=	src/irc_cmd_part.c
+CSRC		+=	src/irc_cmd_005.c
+CSRC		+=	src/channel.c
+CSRC		+=	src/irc_commands.c
+CSRC		+=	src/irc_handle_cmd.c
+CSRC		+=	src/mode_utils.c
+CSRC		+=	src/irc_cmd_001.c
 
-$(NAME):	$(OBJ)
-	$(AR) $(NAME) $(OBJ)
 
-all:	$(NAME)
+# Objects
+OBJ		=	$(CSRC:.c=.o) $(CXXSRC:.cpp=.o)
 
-tests:
-	@$(MAKE) clean
-	@$(MAKE) CFLAGS='-fprofile-arcs -ftest-coverage' do_tests
+# Rules
+$(LIBNAME): $(OBJ)
+	$(AR) $(LIBNAME) $(filter-out main.o, $(OBJ))
 
-do_tests:	$(NAME)
-	$(CC) -c $(CFLAGS)            -o src/tests.o src/tests.c
-	$(CC) -fprofile-arcs -ftest-coverage -o tests $(OBJ) src/tests.o
-	@echo "./tests && gcov */*.gcda && mkdir -p gcov && mv *.gcov gcov && rm src/*.gcno src/*.gcda" > do_tests.sh && chmod +x do_tests.sh
+all: $(LIBNAME)
 
 clean:
-	$(RM) $(OBJ) src/tests.o
+	$(RM) $(OBJ)
 
-fclean: clean
-	$(RM) $(NAME) a.out tests do_tests.sh $(SRC:.c=.gcda) src/tests.gcda $(SRC:.c=.gcno) src/tests.gcno
+fclean:
+	$(RM) $(OBJ) $(LIBNAME)
 
-ex:
-	@$(MAKE) CFLAGS=-ggdb3
-	$(CC) main.c $(CFLAGS) -ggdb3 -L. -lIRC
+re: fclean all
 
-re:	fclean all
+.PHONY: 	all clean fclean re
 
-.PHONY: all clean fclean re tests ex
+src/irc_cmd_353.o: src/irc_cmd_353.c include/irc.h include/t_mapstring.h include/t_string.h include/buffer.h
+	$(CC) $(CFLAGS) -c -o src/irc_cmd_353.o src/irc_cmd_353.c
+
+src/irc_cmd_kick.o: src/irc_cmd_kick.c include/irc.h include/t_mapstring.h include/t_string.h include/buffer.h
+	$(CC) $(CFLAGS) -c -o src/irc_cmd_kick.o src/irc_cmd_kick.c
+
+src/ircconnection.o: src/ircconnection.c include/irc.h include/t_mapstring.h include/t_string.h include/buffer.h
+	$(CC) $(CFLAGS) -c -o src/ircconnection.o src/ircconnection.c
+
+src/irc_cmd_quit.o: src/irc_cmd_quit.c include/irc.h include/t_mapstring.h include/t_string.h include/buffer.h
+	$(CC) $(CFLAGS) -c -o src/irc_cmd_quit.o src/irc_cmd_quit.c
+
+src/irc_cmd_ping.o: src/irc_cmd_ping.c include/irc.h include/t_mapstring.h include/t_string.h include/buffer.h
+	$(CC) $(CFLAGS) -c -o src/irc_cmd_ping.o src/irc_cmd_ping.c
+
+src/string.o: src/string.c include/t_string.h
+	$(CC) $(CFLAGS) -c -o src/string.o src/string.c
+
+src/buffer.o: src/buffer.c include/buffer.h
+	$(CC) $(CFLAGS) -c -o src/buffer.o src/buffer.c
+
+src/irc_eval_cmd.o: src/irc_eval_cmd.c include/irc.h include/t_mapstring.h include/t_string.h include/buffer.h
+	$(CC) $(CFLAGS) -c -o src/irc_eval_cmd.o src/irc_eval_cmd.c
+
+src/irc_cmd_nick.o: src/irc_cmd_nick.c include/irc.h include/t_mapstring.h include/t_string.h include/buffer.h
+	$(CC) $(CFLAGS) -c -o src/irc_cmd_nick.o src/irc_cmd_nick.c
+
+src/irc_cmd_mode.o: src/irc_cmd_mode.c include/irc.h include/t_mapstring.h include/t_string.h include/buffer.h
+	$(CC) $(CFLAGS) -c -o src/irc_cmd_mode.o src/irc_cmd_mode.c
+
+src/mapstring.o: src/mapstring.c include/t_mapstring.h include/t_string.h
+	$(CC) $(CFLAGS) -c -o src/mapstring.o src/mapstring.c
+
+src/tests.o: src/tests.c include/t_string.h
+	$(CC) $(CFLAGS) -c -o src/tests.o src/tests.c
+
+src/irc_cmd_join.o: src/irc_cmd_join.c include/irc.h include/t_mapstring.h include/t_string.h include/buffer.h
+	$(CC) $(CFLAGS) -c -o src/irc_cmd_join.o src/irc_cmd_join.c
+
+src/user.o: src/user.c include/irc.h include/t_mapstring.h include/t_string.h include/buffer.h
+	$(CC) $(CFLAGS) -c -o src/user.o src/user.c
+
+src/irc_cmd_part.o: src/irc_cmd_part.c include/irc.h include/t_mapstring.h include/t_string.h include/buffer.h
+	$(CC) $(CFLAGS) -c -o src/irc_cmd_part.o src/irc_cmd_part.c
+
+src/irc_cmd_005.o: src/irc_cmd_005.c include/irc.h include/t_mapstring.h include/t_string.h include/buffer.h
+	$(CC) $(CFLAGS) -c -o src/irc_cmd_005.o src/irc_cmd_005.c
+
+src/channel.o: src/channel.c include/irc.h include/t_mapstring.h include/t_string.h include/buffer.h
+	$(CC) $(CFLAGS) -c -o src/channel.o src/channel.c
+
+src/irc_commands.o: src/irc_commands.c include/irc.h include/t_mapstring.h include/t_string.h include/buffer.h
+	$(CC) $(CFLAGS) -c -o src/irc_commands.o src/irc_commands.c
+
+src/irc_handle_cmd.o: src/irc_handle_cmd.c include/irc.h include/t_mapstring.h include/t_string.h include/buffer.h
+	$(CC) $(CFLAGS) -c -o src/irc_handle_cmd.o src/irc_handle_cmd.c
+
+src/mode_utils.o: src/mode_utils.c include/irc.h include/t_mapstring.h include/t_string.h include/buffer.h
+	$(CC) $(CFLAGS) -c -o src/mode_utils.o src/mode_utils.c
+
+src/irc_cmd_001.o: src/irc_cmd_001.c include/irc.h include/t_mapstring.h include/t_string.h include/buffer.h
+	$(CC) $(CFLAGS) -c -o src/irc_cmd_001.o src/irc_cmd_001.c
+
