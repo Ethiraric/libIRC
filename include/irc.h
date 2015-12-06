@@ -90,6 +90,7 @@ typedef struct		s_ircconnection
   t_mapstring		chanlist;
   t_command		cmd;
   t_ircnfo		nfo;
+  t_buffer		buff_infos;
   t_buffer		buff_w;
   t_buffer		buff_r;
   t_string		nick;

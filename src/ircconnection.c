@@ -116,7 +116,7 @@ int		irc_send_infos(t_ircconnection *co)
 {
   if (str_str(&co->pass))
     {
-      if (buffer_write(&co->buff_w,
+      if (buffer_write(&co->buff_infos,
 		       "PASS %s\r\nNICK %s\r\nUSER %s %s 127.0.0.1 :%s\r\n",
 		       str_str(&co->pass), str_str(&co->nick),
 		       str_str(&co->user), str_str(&co->user),
@@ -125,7 +125,7 @@ int		irc_send_infos(t_ircconnection *co)
     }
   else
     {
-      if (buffer_write(&co->buff_w,
+      if (buffer_write(&co->buff_infos,
 		       "NICK %s\r\nUSER %s %s 127.0.0.1 :%s\r\n",
 		       str_str(&co->nick),str_str(&co->user),
 		       str_str(&co->user), str_str(&co->realname)) == -1)
@@ -149,27 +149,50 @@ int		irc_disconnect(t_ircconnection *co)
 
 size_t		irc_send_buff_len(t_ircconnection *co)
 {
-  return (buffer_size(&co->buff_w));
+  return (co->accepted  ? buffer_size(&co->buff_w) : buffer_size(&co->buff_infos));
 }
 
 int		irc_send(t_ircconnection *co)
 {
   int		ret;
 
-  if (!buffer_size(&co->buff_w))
-    return (0);
-  ret = write(co->socket, buffer_data(&co->buff_w), buffer_size(&co->buff_w));
-  if (ret == -1)
-    return (1);
-  if (buffer_rotate(&co->buff_w, (size_t)ret))
-    return (1);
+  if (!co->accepted)
+    {
+      if (!buffer_size(&co->buff_infos))
+	return (0);
+      ret = write(co->socket, buffer_data(&co->buff_infos),
+		  buffer_size(&co->buff_infos));
+      if (ret == -1)
+	return (1);
+      if (buffer_rotate(&co->buff_infos, (size_t)ret))
+	return (1);
+    }
+  else
+    {
+      if (!buffer_size(&co->buff_w))
+	return (0);
+      ret = write(co->socket, buffer_data(&co->buff_w),
+		  buffer_size(&co->buff_w));
+      if (ret == -1)
+	return (1);
+      if (buffer_rotate(&co->buff_w, (size_t)ret))
+	return (1);
+    }
   return (0);
 }
 
 int		irc_send_raw(t_ircconnection *co, const void *dat, size_t len)
 {
-  if (buffer_append(&co->buff_w, dat, len))
-    return (1);
+  if (co->accepted)
+    {
+      if (buffer_append(&co->buff_w, dat, len))
+	return (1);
+    }
+  else
+    {
+      if (buffer_append(&co->buff_infos, dat, len))
+	return (1);
+    }
   return (0);
 }
 
