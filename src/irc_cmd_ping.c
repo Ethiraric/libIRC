@@ -13,7 +13,15 @@
 int		irc_cmd_ping(t_ircconnection *irc)
 {
   if (!irc->cmd.argc)
-    return (irc_send_formatted(irc, "PONG\r\n"));
-  return (irc_send_formatted(irc, "PONG :%s\r\n",
-			     irc->cmd.args[irc->cmd.argc - 1]));
+    {
+      if (irc->accepted)
+	return (buffer_append(&irc->buff_w, "PONG\r\n", 6));
+      return (buffer_append(&irc->buff_infos, "PONG\r\n", 6));
+
+    }
+  if (irc->accepted)
+    return (buffer_write(&irc->buff_w, "PONG :%s\r\n",
+			 irc->cmd.args[irc->cmd.argc - 1]) == -1);
+  return (buffer_write(&irc->buff_infos, "PONG :%s\r\n",
+		       irc->cmd.args[irc->cmd.argc - 1]) == -1);
 }

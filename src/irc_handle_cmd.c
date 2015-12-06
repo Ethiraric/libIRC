@@ -21,14 +21,15 @@ static unsigned int	stattab[] =
 
 static const char	*cmdtab[] =
 {
-  "PING", "JOIN", "PART", "QUIT", "MODE", "005", "353",
+  "PING", "JOIN", "PART", "QUIT", "MODE", "005", "353", "001",
   "NICK", "KICK",
   NULL
 };
 
 static int (* const fcttab[])(t_ircconnection *irc) =
 {
-  &irc_cmd_ping, &irc_cmd_join, &irc_cmd_part, &irc_cmd_quit, &irc_cmd_mode, &irc_cmd_005, &irc_cmd_353,
+  &irc_cmd_ping, &irc_cmd_join, &irc_cmd_part, &irc_cmd_quit, &irc_cmd_mode,
+  &irc_cmd_005, &irc_cmd_353, &irc_cmd_001,
   &irc_cmd_nick, &irc_cmd_kick,
   NULL
 };
