@@ -245,3 +245,8 @@ int		irc_get_socket(const t_ircconnection *co)
 {
   return (co->socket);
 }
+
+bool		irc_is_accepted(const t_ircconnection *co)
+{
+  return (co->accepted);
+}

@@ -98,6 +98,7 @@ typedef struct		s_ircconnection
   t_string		realname;
   t_string		servername;
   char			*command;
+  bool			accepted;
   int			socket;
 }			t_ircconnection;
 
@@ -121,6 +122,7 @@ int		irc_handle_cmd(t_ircconnection *irc, bool eval);
 int		free_cmd(t_ircconnection *irc);
 size_t		irc_send_buff_len(t_ircconnection *co);
 int		irc_get_socket(const t_ircconnection *co);
+bool		irc_is_accepted(const t_ircconnection *co);
 
 //TODO: Temporary
 void		irc_dump_stats();
@@ -161,6 +163,7 @@ int		cmd_part(t_ircconnection *irc);
 int		cmd_quit(t_ircconnection *irc);
 int		cmd_mode(t_ircconnection *irc);
 int		cmd_ping(t_ircconnection *irc);
+int		cmd_001(t_ircconnection *irc);
 int		cmd_005(t_ircconnection *irc);
 int		cmd_353(t_ircconnection *irc);
 int		cmd_nick(t_ircconnection *irc);
