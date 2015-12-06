@@ -4,8 +4,8 @@
 ## Made by Florian SABOURIN
 ## Login   <sabour_f@epitech.net>
 ##
-## Started on  Sun Dec 06 08:49:49 2015 Florian SABOURIN
-## Last update Sun Dec 06 08:49:49 2015 Florian SABOURIN
+## Started on  Sun Dec 06 15:04:30 2015 Florian SABOURIN
+## Last update Sun Dec 06 15:04:30 2015 Florian SABOURIN
 ##
 
 # Executables
@@ -35,7 +35,6 @@ CSRC		+=	src/irc_eval_cmd.c
 CSRC		+=	src/irc_cmd_nick.c
 CSRC		+=	src/irc_cmd_mode.c
 CSRC		+=	src/mapstring.c
-CSRC		+=	src/tests.c
 CSRC		+=	src/irc_cmd_join.c
 CSRC		+=	src/user.c
 CSRC		+=	src/irc_cmd_part.c
@@ -98,9 +97,6 @@ src/irc_cmd_mode.o: src/irc_cmd_mode.c include/irc.h include/t_mapstring.h inclu
 
 src/mapstring.o: src/mapstring.c include/t_mapstring.h include/t_string.h
 	$(CC) $(CFLAGS) -c -o src/mapstring.o src/mapstring.c
-
-src/tests.o: src/tests.c include/t_string.h
-	$(CC) $(CFLAGS) -c -o src/tests.o src/tests.c
 
 src/irc_cmd_join.o: src/irc_cmd_join.c include/irc.h include/t_mapstring.h include/t_string.h include/buffer.h
 	$(CC) $(CFLAGS) -c -o src/irc_cmd_join.o src/irc_cmd_join.c
