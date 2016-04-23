@@ -31,6 +31,8 @@ void		mapstring_new(t_mapstring *map);
 void		mapstring_delete(t_mapstring *mapstr);
 int		mapstring_realloc(t_mapstring *map, size_t size);
 void		*mapstring_at(t_mapstring *map, size_t idx);
+int		mapstring_foreach(t_mapstring *map,
+				  int (*fct)(const t_string *, void *));
 unsigned int	mapstring_findpos(const t_mapstring *map, const char *key);
 void		*mapstring_findcstr(const t_mapstring *map, const char *key);
 void		*mapstring_find(const t_mapstring *map, const t_string *key);

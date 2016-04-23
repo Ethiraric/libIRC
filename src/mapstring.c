@@ -65,6 +65,17 @@ void		*mapstring_at(t_mapstring *map, size_t idx)
   return (map->tab[idx].value);
 }
 
+int		mapstring_foreach(t_mapstring *map,
+				  int (*fct)(const t_string *, void *))
+{
+  int		ret;
+
+  for (unsigned int i = 0 ; i < map->len ; ++i)
+    if ((ret = fct(&map->tab[i].key, map->tab[i].value)))
+      return (ret);
+  return (0);
+}
+
   /* Find */
 
 unsigned int	mapstring_findpos(const t_mapstring *map, const char *key)
