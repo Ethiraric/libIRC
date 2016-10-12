@@ -8,48 +8,42 @@
 ** Last update Tue Apr 14 18:40:30 2015 Florian SABOURIN
 */
 
+#include "t_mapstring.h"
 #include <stdlib.h>
 #include <string.h>
-#include "t_mapstring.h"
 
-  /* New */
+/* New */
 
-void				mapstring_new(t_mapstring *map)
+void mapstring_new(t_mapstring* map)
 {
-  static const t_mapstring	model =
-  {
-    (void *)(0),
-    0,
-    0,
-    10
-  };
+  static const t_mapstring model = {(void*)(0), 0, 0, 10};
 
   *map = model;
 }
 
-  /* Delete */
+/* Delete */
 
-void		mapstring_delete(t_mapstring *mapstr)
+void mapstring_delete(t_mapstring* mapstr)
 {
-  unsigned int	i;
+  unsigned int i;
 
   i = 0;
   while (i < mapstr->len)
-    {
-      str_delete(&(mapstr->tab[i].key));
-      ++i;
-    }
+  {
+    str_delete(&(mapstr->tab[i].key));
+    ++i;
+  }
   free(mapstr->tab);
   mapstr->tab = NULL;
   mapstr->len = 0;
   mapstr->allocd = 0;
 }
 
-  /* Realloc */
+/* Realloc */
 
-int		mapstring_realloc(t_mapstring *map, size_t size)
+int mapstring_realloc(t_mapstring* map, size_t size)
 {
-  void		*newptr;
+  void* newptr;
 
   if (!(newptr = realloc(map->tab, sizeof(t_mapstringpair) * size)))
     return (1);
@@ -58,32 +52,31 @@ int		mapstring_realloc(t_mapstring *map, size_t size)
   return (0);
 }
 
-  /* Access */
+/* Access */
 
-void		*mapstring_at(t_mapstring *map, size_t idx)
+void* mapstring_at(t_mapstring* map, size_t idx)
 {
   return (map->tab[idx].value);
 }
 
-int		mapstring_foreach(t_mapstring *map,
-				  int (*fct)(const t_string *, void *))
+int mapstring_foreach(t_mapstring* map, int (*fct)(const t_string*, void*))
 {
-  int		ret;
+  int ret;
 
-  for (unsigned int i = 0 ; i < map->len ; ++i)
+  for (unsigned int i = 0; i < map->len; ++i)
     if ((ret = fct(&map->tab[i].key, map->tab[i].value)))
       return (ret);
   return (0);
 }
 
-  /* Find */
+/* Find */
 
-unsigned int	mapstring_findpos(const t_mapstring *map, const char *key)
+unsigned int mapstring_findpos(const t_mapstring* map, const char* key)
 {
-  unsigned int	lbound;
-  unsigned int	ubound;
-  unsigned int	pos;
-  int		cmp;
+  unsigned int lbound;
+  unsigned int ubound;
+  unsigned int pos;
+  int cmp;
 
   if (!map->len)
     return ((unsigned int)(-1));
@@ -91,16 +84,16 @@ unsigned int	mapstring_findpos(const t_mapstring *map, const char *key)
   ubound = map->len;
   /* Using bisection method */
   while (ubound - lbound > 1)
-    {
-      pos = (lbound + ubound) / 2;
-      cmp = strcmp(str_safestr(&map->tab[pos].key), key);
-      if (cmp > 0)
-	ubound = pos;
-      else if (cmp < 0)
-	lbound = pos;
-      else
-	return (pos);
-    }
+  {
+    pos = (lbound + ubound) / 2;
+    cmp = strcmp(str_safestr(&map->tab[pos].key), key);
+    if (cmp > 0)
+      ubound = pos;
+    else if (cmp < 0)
+      lbound = pos;
+    else
+      return (pos);
+  }
   /* From here, we have only two strings left to compare */
   if (!strcmp(str_safestr(&map->tab[lbound].key), key))
     return (lbound);
@@ -109,9 +102,9 @@ unsigned int	mapstring_findpos(const t_mapstring *map, const char *key)
   return ((unsigned int)(-1));
 }
 
-void		*mapstring_findcstr(const t_mapstring *map, const char *key)
+void* mapstring_findcstr(const t_mapstring* map, const char* key)
 {
-  unsigned int	pos;
+  unsigned int pos;
 
   pos = mapstring_findpos(map, key);
   if (pos == (unsigned int)(-1))
@@ -119,9 +112,9 @@ void		*mapstring_findcstr(const t_mapstring *map, const char *key)
   return (map->tab[pos].value);
 }
 
-void		*mapstring_find(const t_mapstring *map, const t_string *key)
+void* mapstring_find(const t_mapstring* map, const t_string* key)
 {
-  unsigned int	pos;
+  unsigned int pos;
 
   pos = mapstring_findpos(map, str_safestr(key));
   if (pos == (unsigned int)(-1))
@@ -129,80 +122,86 @@ void		*mapstring_find(const t_mapstring *map, const t_string *key)
   return (&(map->tab[pos].value));
 }
 
-  /* Erase */
+/* Erase */
 
-int		mapstring_erase(t_mapstring *map, const t_string *key)
+int mapstring_erase(t_mapstring* map, const t_string* key)
 {
-  unsigned int	pos;
+  unsigned int pos;
 
   pos = mapstring_findpos(map, str_safestr(key));
   if (pos == (unsigned int)(-1))
     return (0);
   str_delete(&(map->tab[pos].key));
-  memmove(&(map->tab[pos]), &(map->tab[pos + 1]),
-      (map->len - pos) * sizeof(t_mapstringpair));
+  memmove(&(map->tab[pos]),
+          &(map->tab[pos + 1]),
+          (map->len - pos) * sizeof(t_mapstringpair));
   --(map->len);
   if (map->allocd - map->len > 2 * map->alloc_step)
     return (mapstring_realloc(map, map->allocd - map->alloc_step));
   return (0);
 }
 
-int		mapstring_erasecstr(t_mapstring *map, const char *key)
+int mapstring_erasecstr(t_mapstring* map, const char* key)
 {
-  unsigned int	pos;
+  unsigned int pos;
 
   pos = mapstring_findpos(map, key);
   if (pos == (unsigned int)(-1))
     return (1);
   str_delete(&(map->tab[pos].key));
-  memmove(&(map->tab[pos]), &(map->tab[pos + 1]),
-      (map->len - pos) * sizeof(t_mapstringpair));
+  memmove(&(map->tab[pos]),
+          &(map->tab[pos + 1]),
+          (map->len - pos) * sizeof(t_mapstringpair));
   --(map->len);
   if (map->allocd - map->len > 2 * map->alloc_step)
     return (mapstring_realloc(map, map->allocd - map->alloc_step));
   return (0);
 }
 
-int		mapstring_erase_idx(t_mapstring *map, unsigned int idx)
+int mapstring_erase_idx(t_mapstring* map, unsigned int idx)
 {
   if (idx == (unsigned int)(-1))
     return (0);
   if (idx > map->len)
     return (1);
   str_delete(&(map->tab[idx].key));
-  memmove(&map->tab[idx], &map->tab[idx + 1],
-      (map->len - idx) * sizeof(t_mapstringpair));
+  memmove(&map->tab[idx],
+          &map->tab[idx + 1],
+          (map->len - idx) * sizeof(t_mapstringpair));
   --(map->len);
   if (map->allocd - map->len > 2 * map->alloc_step)
     return (mapstring_realloc(map, map->allocd - map->alloc_step));
   return (0);
 }
 
-  /* Insert */
+/* Insert */
 
-static int	mapstring_insertat(t_mapstring *map, unsigned int idx,
-				   const t_string *key, void *value)
+static int mapstring_insertat(t_mapstring* map,
+                              unsigned int idx,
+                              const t_string* key,
+                              void* value)
 {
-  t_string	cpy;
+  t_string cpy;
 
   if (str_newfromstr(&cpy, key))
     return (1);
-  memmove(&(map->tab[idx + 1]), &(map->tab[idx]),
-      (map->len - idx) * sizeof(t_mapstringpair));
+  memmove(&(map->tab[idx + 1]),
+          &(map->tab[idx]),
+          (map->len - idx) * sizeof(t_mapstringpair));
   map->tab[idx].key = cpy;
   map->tab[idx].value = value;
   ++(map->len);
   return (0);
 }
 
-static unsigned int	mapstring_insertfindpos(const t_mapstring *map,
-						const t_string *key)
+static unsigned int mapstring_insertfindpos(const t_mapstring* map,
+                                            const t_string* key)
 {
-  unsigned int	lbound;
-  unsigned int	ubound;
-  unsigned int	pos;
-  int		cmp;
-  const char	*keystr;
+  unsigned int lbound;
+  unsigned int ubound;
+  unsigned int pos;
+  int cmp;
+  const char* keystr;
 
   lbound = 0;
   ubound = map->len;
@@ -210,16 +209,16 @@ static unsigned int	mapstring_insertfindpos(const t_mapstring *map,
   /* Using bisection method */
   keystr = str_safestr(key);
   while (ubound - lbound > 1)
-    {
-      cmp = strcmp(str_safestr(&map->tab[pos].key), keystr);
-      if (cmp > 0)
-	ubound = pos;
-      else if (cmp < 0)
-	lbound = pos;
-      else
-	return (pos);
-      pos = (ubound + lbound) / 2;
-    }
+  {
+    cmp = strcmp(str_safestr(&map->tab[pos].key), keystr);
+    if (cmp > 0)
+      ubound = pos;
+    else if (cmp < 0)
+      lbound = pos;
+    else
+      return (pos);
+    pos = (ubound + lbound) / 2;
+  }
   /* We now have two contiguous cells in our tab
    * The key can be one of it, or before / between / after the cells */
   cmp = strcmp(str_safestr(&map->tab[pos].key), keystr);
@@ -238,42 +237,40 @@ static unsigned int	mapstring_insertfindpos(const t_mapstring *map,
   return (pos + 1);
 }
 
-int		mapstring_insert(t_mapstring *map, const t_string *key,
-				 void *value)
+int mapstring_insert(t_mapstring* map, const t_string* key, void* value)
 {
-  unsigned int	pos;
+  unsigned int pos;
 
   if (map->allocd - map->len < 1 &&
       mapstring_realloc(map, map->allocd + map->alloc_step))
     return (1);
   if (!map->len)
-    {
-      if (str_newfromstr(&(map->tab[0].key), key))
-	return (1);
-      map->tab[0].value = value;
-      ++map->len;
-      return (0);
-    }
+  {
+    if (str_newfromstr(&(map->tab[0].key), key))
+      return (1);
+    map->tab[0].value = value;
+    ++map->len;
+    return (0);
+  }
   pos = mapstring_insertfindpos(map, key);
   if (pos < map->len)
+  {
+    if (!strcmp(str_safestr(&map->tab[pos].key), str_safestr(key)))
     {
-      if (!strcmp(str_safestr(&map->tab[pos].key), str_safestr(key)))
-	{
-	  map->tab[pos].value = value;
-	  return (0);
-	}
-      return (mapstring_insertat(map, pos, key, value));
+      map->tab[pos].value = value;
+      return (0);
     }
+    return (mapstring_insertat(map, pos, key, value));
+  }
   ++map->len;
   map->tab[pos].value = value;
   return (str_newfromstr(&map->tab[pos].key, key));
 }
 
-int		mapstring_insertcstr(t_mapstring *map, const char *ckey,
-				     void *value)
+int mapstring_insertcstr(t_mapstring* map, const char* ckey, void* value)
 {
-  t_string	key;
-  int		ret;
+  t_string key;
+  int ret;
 
   if (str_newfromcstr(&key, ckey))
     return (1);
@@ -282,29 +279,28 @@ int		mapstring_insertcstr(t_mapstring *map, const char *ckey,
   return (ret);
 }
 
-int		mapstring_insertnew(t_mapstring *map, const t_string *key,
-				    void *value)
+int mapstring_insertnew(t_mapstring* map, const t_string* key, void* value)
 {
-  unsigned int	pos;
+  unsigned int pos;
 
   if (map->allocd - map->len < 1 &&
       mapstring_realloc(map, map->allocd + map->alloc_step))
     return (1);
   if (!map->len)
-    {
-      if (str_newfromstr(&(map->tab[0].key), key))
-	return (1);
-      map->tab[0].value = value;
-      ++map->len;
-      return (0);
-    }
+  {
+    if (str_newfromstr(&(map->tab[0].key), key))
+      return (1);
+    map->tab[0].value = value;
+    ++map->len;
+    return (0);
+  }
   pos = mapstring_insertfindpos(map, key);
   if (pos < map->len)
-    {
-      if (!strcmp(str_safestr(&map->tab[pos].key), str_safestr(key)))
-	return (2);
-      return (mapstring_insertat(map, pos, key, value));
-    }
+  {
+    if (!strcmp(str_safestr(&map->tab[pos].key), str_safestr(key)))
+      return (2);
+    return (mapstring_insertat(map, pos, key, value));
+  }
   if (str_newfromstr(&map->tab[pos].key, key))
     return (1);
   map->tab[pos].value = value;
@@ -312,11 +308,10 @@ int		mapstring_insertnew(t_mapstring *map, const t_string *key,
   return (0);
 }
 
-int		mapstring_insertnewcstr(t_mapstring *map, const char *ckey,
-					void *value)
+int mapstring_insertnewcstr(t_mapstring* map, const char* ckey, void* value)
 {
-  t_string	key;
-  int		ret;
+  t_string key;
+  int ret;
 
   if (str_newfromcstr(&key, ckey))
     return (1);
@@ -325,9 +320,9 @@ int		mapstring_insertnewcstr(t_mapstring *map, const char *ckey,
   return (ret);
 }
 
-  /* Getters */
+/* Getters */
 
-size_t		mapstring_size(t_mapstring *map)
+size_t mapstring_size(t_mapstring* map)
 {
   return (map->len);
 }

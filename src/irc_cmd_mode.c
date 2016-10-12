@@ -10,9 +10,9 @@
 
 #include "irc.h"
 
-static int	apply_user_mode(t_user *user, bool add, char mode)
+static int apply_user_mode(t_user* user, bool add, char mode)
 {
-  t_mode	mask;
+  t_mode mask;
 
   mask = irc_mode_mask(irc_mode_fromchar(mode));
   if (add)
@@ -22,48 +22,48 @@ static int	apply_user_mode(t_user *user, bool add, char mode)
   return (0);
 }
 
-static int	apply_modes(t_ircconnection *irc, t_channel *chan)
+static int apply_modes(t_ircconnection* irc, t_channel* chan)
 {
-  unsigned int	it;
-  t_user	*user;
-  char		*modes;
-  bool		add;
+  unsigned int it;
+  t_user* user;
+  char* modes;
+  bool add;
 
   modes = irc->cmd.args[1];
   if (*modes != '+' && *modes != '-')
     return (0);
   it = 2;
   while (*modes)
+  {
+    if (*modes == '+')
+      add = true;
+    else if (*modes == '-')
+      add = false;
+    else
     {
-      if (*modes == '+')
-	add = true;
-      else if (*modes == '-')
-	add = false;
-      else
-	{
-	  user = mapstring_findcstr(&chan->users, irc->cmd.args[it]);
-	  if (user)
-	    apply_user_mode(user, add, *modes);
-	  ++it;
-	  if (it >= irc->cmd.argc)
-	    return (0);
-	}
-      ++modes;
+      user = mapstring_findcstr(&chan->users, irc->cmd.args[it]);
+      if (user)
+        apply_user_mode(user, add, *modes);
+      ++it;
+      if (it >= irc->cmd.argc)
+        return (0);
     }
+    ++modes;
+  }
   return (0);
 }
 
 // TODO: handle chan modes
-static int	apply_chanmodes(t_ircconnection *irc, t_channel *chan)
+static int apply_chanmodes(t_ircconnection* irc, t_channel* chan)
 {
   (void)(irc);
   (void)(chan);
   return (0);
 }
 
-int		irc_cmd_mode(t_ircconnection *irc)
+int irc_cmd_mode(t_ircconnection* irc)
 {
-  t_channel	*chan;
+  t_channel* chan;
 
   if (irc->cmd.argc < 2)
     return (0);

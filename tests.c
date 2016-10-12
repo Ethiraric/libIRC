@@ -8,17 +8,16 @@
 ** Last update Wed Apr 15 01:05:46 2015 Florian SABOURIN
 */
 
+#include "t_string.h"
 #include <assert.h>
 #include <err.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "t_string.h"
 
-void		test_t_string()
+void test_t_string()
 {
-  t_string	a, b;
-
+  t_string a, b;
 
   // Act
   str_new(&a);
@@ -135,8 +134,8 @@ void		test_t_string()
   /* ----------------------------- */
 
   // Act
-  if (str_newfromcstr(&a, "lel") || str_newfromstr(&b, &a) ||
-      str_delete(&a) || str_detach(&b) || str_delete(&b))
+  if (str_newfromcstr(&a, "lel") || str_newfromstr(&b, &a) || str_delete(&a) ||
+      str_detach(&b) || str_delete(&b))
     err(1, NULL);
 
   // Assert
@@ -280,7 +279,7 @@ void		test_t_string()
   assert(!str_size(&b));
 }
 
-int		main()
+int main()
 {
   test_t_string();
   printf("All the tests passed\n");

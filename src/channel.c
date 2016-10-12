@@ -8,26 +8,26 @@
 ** Last update Fri Apr 17 00:29:16 2015 Florian SABOURIN
 */
 
-#include <string.h>
-#include <stdlib.h>
 #include "irc.h"
+#include <stdlib.h>
+#include <string.h>
 
-void		new_chan(t_channel *chan)
+void new_chan(t_channel* chan)
 {
   memset(chan, 0, sizeof(t_channel));
   mapstring_new(&chan->users);
 }
 
-int		delete_chan(t_channel *chan, bool free_struct)
+int delete_chan(t_channel* chan, bool free_struct)
 {
-  size_t	it;
+  size_t it;
 
   it = 0;
   while (it < mapstring_size(&chan->users))
-    {
-      delete_user(mapstring_at(&chan->users, it), true);
-      ++it;
-    }
+  {
+    delete_user(mapstring_at(&chan->users, it), true);
+    ++it;
+  }
   mapstring_delete(&chan->users);
   str_delete(&chan->name);
   str_delete(&chan->topic);

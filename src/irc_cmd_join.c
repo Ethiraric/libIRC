@@ -8,16 +8,16 @@
 ** Last update Fri Apr 17 00:29:19 2015 Florian SABOURIN
 */
 
+#include "irc.h"
 #include <stdlib.h>
 #include <string.h>
-#include "irc.h"
 
-  /* Add a user in a chan */
-static int	user_join_chan(t_ircconnection *irc, const char *channame)
+/* Add a user in a chan */
+static int user_join_chan(t_ircconnection* irc, const char* channame)
 {
-  t_channel	*chan;
-  t_user	*user;
-  int		ret;
+  t_channel* chan;
+  t_user* user;
+  int ret;
 
   chan = mapstring_findcstr(&irc->chanlist, channame);
   if (!chan)
@@ -28,101 +28,102 @@ static int	user_join_chan(t_ircconnection *irc, const char *channame)
   new_user(user, irc->cmd.prefix);
   ret = mapstring_insertnew(&chan->users, &user->nick, user);
   if (ret)
-    {
-      str_delete(&user->nick);
-      free(user);
-      return (ret);
-    }
+  {
+    str_delete(&user->nick);
+    free(user);
+    return (ret);
+  }
   return (0);
 }
 
-  /* If someone joined a chan we are in */
-static int	new_user_in_chan(t_ircconnection *irc)
+/* If someone joined a chan we are in */
+static int new_user_in_chan(t_ircconnection* irc)
 {
-  char		*begin;
-  char		*end;
-  int		ret;
+  char* begin;
+  char* end;
+  int ret;
 
   begin = irc->cmd.args[0];
   ret = 0;
   while (*begin)
+  {
+    end = strchr(begin, ',');
+    if (end)
     {
-      end = strchr(begin, ',');
-      if (end)
-	{
-	  *end = 0;
-	  ret |= user_join_chan(irc, begin);
-	  if (ret & 1)
-	    return (1);
-	  *end = ',';
-	  begin = end + 1;
-	}
-      else
-	{
-	  ret |= user_join_chan(irc, begin);
-	  if (ret & 1)
-	    return (1);
-	  begin = rawmemchr(begin, '\0');
-	}
+      *end = 0;
+      ret |= user_join_chan(irc, begin);
+      if (ret & 1)
+        return (1);
+      *end = ',';
+      begin = end + 1;
     }
+    else
+    {
+      ret |= user_join_chan(irc, begin);
+      if (ret & 1)
+        return (1);
+      begin = rawmemchr(begin, '\0');
+    }
+  }
   return (0);
 }
 
-  /* Joining one chan at a time */
-static int	join_chan(t_ircconnection *irc, const char *channame)
+/* Joining one chan at a time */
+static int join_chan(t_ircconnection* irc, const char* channame)
 {
-  t_channel	*chan;
-  int		ret;
+  t_channel* chan;
+  int ret;
 
   chan = malloc(sizeof(t_channel));
   if (!chan)
     return (1);
-  new_chan(chan);;
+  new_chan(chan);
+  ;
   if (str_newfromcstr(&chan->name, channame))
     return (delete_chan(chan, 1) | 1);
   ret = mapstring_insertnew(&irc->chanlist, &chan->name, chan);
   if (ret)
-    {
-      str_delete(&chan->name);
-      free(chan);
-      return (ret);
-    }
+  {
+    str_delete(&chan->name);
+    free(chan);
+    return (ret);
+  }
   return (0);
 }
 
-  /* If we joined a new chan */
-static int	user_join_new_chan(t_ircconnection *irc)
+/* If we joined a new chan */
+static int user_join_new_chan(t_ircconnection* irc)
 {
-  char		*begin;
-  char		*end;
-  int		ret;
+  char* begin;
+  char* end;
+  int ret;
 
   begin = irc->cmd.args[0];
   ret = 0;
   while (*begin)
+  {
+    end = strchr(begin, ',');
+    if (end)
     {
-      end = strchr(begin, ',');
-      if (end)
-	{
-	  *end = 0;
-	  ret |= join_chan(irc, begin);
-	  if (ret & 1)
-	    return (1);
-	  *end = ',';
-	  begin = end + 1;
-	}
-      else
-	{
-	  ret |= join_chan(irc, begin);
-	  if (ret & 1)
-	    return (1);
-	  begin = rawmemchr(begin, '\0');
-	}
+      *end = 0;
+      ret |= join_chan(irc, begin);
+      if (ret & 1)
+        return (1);
+      *end = ',';
+      begin = end + 1;
     }
+    else
+    {
+      ret |= join_chan(irc, begin);
+      if (ret & 1)
+        return (1);
+      begin = rawmemchr(begin, '\0');
+    }
+  }
   return (0);
 }
 
-int		irc_cmd_join(t_ircconnection *irc)
+int irc_cmd_join(t_ircconnection* irc)
 {
   if (irc->cmd.argc == 0 || !irc->cmd.prefix)
     return (0);

@@ -8,16 +8,17 @@
 ** Last update Sat Apr 18 07:33:22 2015 Florian SABOURIN
 */
 
-#include <string.h>
 #include "irc.h"
+#include <string.h>
 
-  /* Make him part one chan at a time */
-static int	left_one_chan(t_ircconnection *irc, const char *channame,
-			      const char *nick)
+/* Make him part one chan at a time */
+static int left_one_chan(t_ircconnection* irc,
+                         const char* channame,
+                         const char* nick)
 {
-  unsigned int	pos;
-  t_channel	*chan;
-  t_user	*user;
+  unsigned int pos;
+  t_channel* chan;
+  t_user* user;
 
   pos = mapstring_findpos(&irc->chanlist, channame);
   if (pos == (unsigned int)-1)
@@ -32,59 +33,59 @@ static int	left_one_chan(t_ircconnection *irc, const char *channame,
   return (0);
 }
 
-  /* Someone left a chan */
-static int	someone_left_chan(t_ircconnection *irc)
+/* Someone left a chan */
+static int someone_left_chan(t_ircconnection* irc)
 {
-  char		*begin;
-  char		*end;
-  char		tmp;
-  int		ret;
+  char* begin;
+  char* end;
+  char tmp;
+  int ret;
 
   begin = irc->cmd.args[0];
   ret = 0;
   end = strpbrk(irc->cmd.prefix, "!@");
   if (end)
-    {
-      tmp = *end;
-      *end = '\0';
-    }
+  {
+    tmp = *end;
+    *end = '\0';
+  }
   else
     tmp = 0;
   while (*begin)
+  {
+    end = strchr(begin, ',');
+    if (end)
     {
-      end = strchr(begin, ',');
-      if (end)
-	{
-	  *end = 0;
-	  ret |= left_one_chan(irc, begin, irc->cmd.prefix);
-	  if (ret & 1)
-	    {
-	      *((char *)rawmemchr(irc->cmd.prefix, '\0')) = tmp;
-	      return (1);
-	    }
-	  *end = ',';
-	  begin = end + 1;
-	}
-      else
-	{
-	  ret |= left_one_chan(irc, begin, irc->cmd.prefix);
-	  if (ret & 1)
-	    {
-	      *((char *)rawmemchr(irc->cmd.prefix, '\0')) = tmp;
-	      return (1);
-	    }
-	  begin = rawmemchr(begin, '\0');
-	}
+      *end = 0;
+      ret |= left_one_chan(irc, begin, irc->cmd.prefix);
+      if (ret & 1)
+      {
+        *((char*)rawmemchr(irc->cmd.prefix, '\0')) = tmp;
+        return (1);
+      }
+      *end = ',';
+      begin = end + 1;
     }
-  *((char *)rawmemchr(irc->cmd.prefix, '\0')) = tmp;
+    else
+    {
+      ret |= left_one_chan(irc, begin, irc->cmd.prefix);
+      if (ret & 1)
+      {
+        *((char*)rawmemchr(irc->cmd.prefix, '\0')) = tmp;
+        return (1);
+      }
+      begin = rawmemchr(begin, '\0');
+    }
+  }
+  *((char*)rawmemchr(irc->cmd.prefix, '\0')) = tmp;
   return (0);
 }
 
-  /* Parting one chan at a time */
-static int	part_chan(t_ircconnection *irc, const char *channame)
+/* Parting one chan at a time */
+static int part_chan(t_ircconnection* irc, const char* channame)
 {
-  unsigned int	pos;
-  t_channel	*chan;
+  unsigned int pos;
+  t_channel* chan;
 
   pos = mapstring_findpos(&irc->chanlist, channame);
   if (pos == (unsigned int)-1)
@@ -95,39 +96,39 @@ static int	part_chan(t_ircconnection *irc, const char *channame)
   return (0);
 }
 
-  /* If we parted a chan */
-static int	user_part_chan(t_ircconnection *irc)
+/* If we parted a chan */
+static int user_part_chan(t_ircconnection* irc)
 {
-  char		*begin;
-  char		*end;
-  int		ret;
+  char* begin;
+  char* end;
+  int ret;
 
   begin = irc->cmd.args[0];
   ret = 0;
   while (*begin)
+  {
+    end = strchr(begin, ',');
+    if (end)
     {
-      end = strchr(begin, ',');
-      if (end)
-	{
-	  *end = 0;
-	  ret |= part_chan(irc, begin);
-	  if (ret & 1)
-	    return (1);
-	  *end = ',';
-	  begin = end + 1;
-	}
-      else
-	{
-	  ret |= part_chan(irc, begin);
-	  if (ret & 1)
-	    return (1);
-	  begin = rawmemchr(begin, '\0');
-	}
+      *end = 0;
+      ret |= part_chan(irc, begin);
+      if (ret & 1)
+        return (1);
+      *end = ',';
+      begin = end + 1;
     }
+    else
+    {
+      ret |= part_chan(irc, begin);
+      if (ret & 1)
+        return (1);
+      begin = rawmemchr(begin, '\0');
+    }
+  }
   return (0);
 }
 
-int		irc_cmd_part(t_ircconnection *irc)
+int irc_cmd_part(t_ircconnection* irc)
 {
   if (irc->cmd.argc == 0 || !irc->cmd.prefix)
     return (0);

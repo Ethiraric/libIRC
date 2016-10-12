@@ -8,11 +8,11 @@
 ** Last update Thu Apr 16 16:18:41 2015 Florian SABOURIN
 */
 
-#include <string.h>
-#include <stdlib.h>
 #include "irc.h"
+#include <stdlib.h>
+#include <string.h>
 
-int		free_cmd(t_ircconnection *irc)
+int free_cmd(t_ircconnection* irc)
 {
   free(irc->cmd.args);
   irc->cmd.args = 0;
@@ -26,42 +26,41 @@ int		free_cmd(t_ircconnection *irc)
   return (0);
 }
 
-  /* strtok that takes into account the ':' meaning the trailing parameter */
-static char	*olds;
-static char	*mstrtok(char *s, const char *delim)
+/* strtok that takes into account the ':' meaning the trailing parameter */
+static char* olds;
+static char* mstrtok(char* s, const char* delim)
 {
-  char *token;
+  char* token;
 
   if (s == NULL)
     s = olds;
   s += strspn(s, delim);
   if (*s == '\0')
-    {
-      olds = s;
-      return NULL;
-    }
+  {
+    olds = s;
+    return NULL;
+  }
   if (*s == ':')
-    {
-      token = s + 1;
-      olds = rawmemchr(token, '\0');
-      return (token);
-    }
+  {
+    token = s + 1;
+    olds = rawmemchr(token, '\0');
+    return (token);
+  }
   token = s;
-  s = strpbrk (token, delim);
+  s = strpbrk(token, delim);
   if (s == NULL)
     olds = rawmemchr(token, '\0');
   else
-    {
-      *s = '\0';
-      olds = s + 1;
-    }
+  {
+    *s = '\0';
+    olds = s + 1;
+  }
   return (token);
 }
 
-
-static int	irc_eval_args(t_ircconnection *irc, char *str)
+static int irc_eval_args(t_ircconnection* irc, char* str)
 {
-  size_t	i;
+  size_t i;
 
   /* If there is no argument */
   if (!mstrtok(str, " "))
@@ -73,28 +72,28 @@ static int	irc_eval_args(t_ircconnection *irc, char *str)
     ++irc->cmd.argc;
 
   /* Allocate a null-terminated array */
-  irc->cmd.args = malloc(sizeof(char *) * (irc->cmd.argc + 1));
+  irc->cmd.args = malloc(sizeof(char*) * (irc->cmd.argc + 1));
   if (!irc->cmd.args)
     return (free_cmd(irc) | 1);
   i = 0;
 
   /* Fill it */
   while (i < irc->cmd.argc - 1)
-    {
-      irc->cmd.args[i] = str;
-      str = rawmemchr(str, '\0') + 1;
-      ++i;
-    }
-  irc->cmd.args[i] = (*str == ':' ? str + 1: str);
+  {
+    irc->cmd.args[i] = str;
+    str = rawmemchr(str, '\0') + 1;
+    ++i;
+  }
+  irc->cmd.args[i] = (*str == ':' ? str + 1 : str);
   irc->cmd.args[i + 1] = NULL;
   return (0);
 }
 
-int		irc_eval_cmd(t_ircconnection *irc)
+int irc_eval_cmd(t_ircconnection* irc)
 {
-  char		*now;
-  char		*unused;
-  int		ret;
+  char* now;
+  char* unused;
+  int ret;
 
   if (!irc->command)
     return (0);
@@ -105,16 +104,16 @@ int		irc_eval_cmd(t_ircconnection *irc)
   if (!now)
     return (0);
   if (*now == ':')
-    {
-      irc->cmd.prefix = now + 1;
-      now = strtok(NULL, " ");
-      if (!now)
-	return (free_cmd(irc));
-      irc->cmd.prefixnick = strdup(irc->cmd.prefix);
-      if (!irc->cmd.prefixnick)
-	return (free_cmd(irc) | 1);
-      irc->cmd.prefixnick = strtok_r(irc->cmd.prefixnick, "@!", &unused);
-    }
+  {
+    irc->cmd.prefix = now + 1;
+    now = strtok(NULL, " ");
+    if (!now)
+      return (free_cmd(irc));
+    irc->cmd.prefixnick = strdup(irc->cmd.prefix);
+    if (!irc->cmd.prefixnick)
+      return (free_cmd(irc) | 1);
+    irc->cmd.prefixnick = strtok_r(irc->cmd.prefixnick, "@!", &unused);
+  }
   irc->cmd.cmd = now;
   ret = irc_eval_args(irc, strtok(0, ""));
   return (ret);

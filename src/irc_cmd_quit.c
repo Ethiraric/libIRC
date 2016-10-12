@@ -8,13 +8,13 @@
 ** Last update Wed Apr 22 11:51:29 2015 Florian SABOURIN
 */
 
-#include <string.h>
 #include "irc.h"
+#include <string.h>
 
-static int	quit_one_chan(t_ircconnection *irc, t_channel *chan)
+static int quit_one_chan(t_ircconnection* irc, t_channel* chan)
 {
-  size_t	pos;
-  t_user	*user;
+  size_t pos;
+  t_user* user;
 
   pos = mapstring_findpos(&chan->users, irc->cmd.prefix);
   if (pos == (unsigned int)-1)
@@ -25,26 +25,26 @@ static int	quit_one_chan(t_ircconnection *irc, t_channel *chan)
   return (0);
 }
 
-int		irc_cmd_quit(t_ircconnection *irc)
+int irc_cmd_quit(t_ircconnection* irc)
 {
-  size_t	it;
-  char		*end;
-  char		tmp;
+  size_t it;
+  char* end;
+  char tmp;
 
   end = strpbrk(irc->cmd.prefix, "@!");
   if (end)
-    {
-      tmp = *end;
-      *end = '\0';
-    }
+  {
+    tmp = *end;
+    *end = '\0';
+  }
   else
     tmp = 0;
   it = 0;
   while (it < mapstring_size(&irc->chanlist))
-    {
-      quit_one_chan(irc, mapstring_at(&irc->chanlist, it));
-      ++it;
-    }
+  {
+    quit_one_chan(irc, mapstring_at(&irc->chanlist, it));
+    ++it;
+  }
   *end = tmp;
   return (0);
 }
