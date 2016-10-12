@@ -125,6 +125,8 @@ int free_cmd(t_ircconnection* irc);
 size_t irc_send_buff_len(t_ircconnection* co);
 int irc_get_socket(const t_ircconnection* co);
 bool irc_is_accepted(const t_ircconnection* co);
+t_buffer const* irc_get_rbuffer(t_ircconnection const* co);
+t_buffer const* irc_get_wbuffer(t_ircconnection const* co);
 
 // TODO: Temporary
 void irc_dump_stats();

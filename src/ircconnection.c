@@ -270,3 +270,13 @@ bool irc_is_accepted(const t_ircconnection* co)
 {
   return (co->accepted);
 }
+
+t_buffer const* irc_get_rbuffer(t_ircconnection const* co)
+{
+  return &co->buff_r;
+}
+
+t_buffer const* irc_get_wbuffer(t_ircconnection const* co)
+{
+  return &co->buff_w;
+}
