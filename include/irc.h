@@ -47,7 +47,6 @@ typedef struct s_user
   t_string nick;
   t_string user;
   t_string host;
-  t_string realname;
   t_mode chanmode;
   t_mode netmode;
 } t_user;

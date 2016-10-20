@@ -57,7 +57,6 @@ int delete_user(t_user* user, bool free_struct)
   str_delete(&user->nick);
   str_delete(&user->user);
   str_delete(&user->host);
-  str_delete(&user->realname);
   if (free_struct)
     free(user);
   return (0);
