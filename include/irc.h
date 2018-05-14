@@ -41,6 +41,10 @@ typedef unsigned int t_mode;
 
 #define MODE_MAX 5
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* A user on a channel */
 typedef struct s_user
 {
@@ -171,5 +175,9 @@ char irc_char_frommask(t_mode mode);
 char irc_char_frommask(t_mode mode);
 void irc_modes_tosyms(t_ircconnection* irc, t_mode mode, char* dst);
 char irc_sym_fromchar(t_ircconnection* irc, char c);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* !IRC_H_ */
