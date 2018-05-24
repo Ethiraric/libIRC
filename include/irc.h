@@ -138,6 +138,7 @@ void irc_dump_stats();
 int irc_join(t_ircconnection* co, const char* chans);
 int irc_part(t_ircconnection* co, const char* chans, char* reason);
 int irc_quit(t_ircconnection* co, const char* reason);
+int irc_msgdata(t_ircconnection* co, const char* dst, const char* msg, size_t len);
 int irc_msg(t_ircconnection* co, const char* dst, const char* msg);
 int irc_msgf(t_ircconnection* co, const char* dst, const char* fmt, ...);
 int irc_mode(t_ircconnection* co,
